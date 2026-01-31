@@ -1,0 +1,47 @@
+:host {
+  display: block;
+}
+
+.gender-toggle {
+  display: flex;
+  background-color: #f3f4f6;
+  border-radius: 9999px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.gender-option {
+  flex: 1;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: transparent;
+  color: #6b7280;
+
+  &:hover:not(.active):not(:disabled) {
+    background-color: #e5e7eb;
+  }
+
+  &.active {
+    background-color: #2C50A5;
+    color: white;
+    box-shadow: 0 2px 4px rgba(44, 80, 165, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.error {
+  border-color: #ef4444;
+  &:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+  }
+}

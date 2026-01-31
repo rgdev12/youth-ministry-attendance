@@ -1,0 +1,98 @@
+<form [formGroup]="memberForm" (ngSubmit)="onSubmit()" class="space-y-5">
+  <!-- Error message -->
+  @if (error) {
+    <div class="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
+      {{ error }}
+    </div>
+  }
+
+  <!-- Name field -->
+  <div class="space-y-2">
+    <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+    <input
+      type="text"
+      id="name"
+      formControlName="name"
+      name="name"
+      placeholder="Nombre del miembro"
+      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+      [class.error]="memberForm.get('name')?.invalid && memberForm.get('name')?.touched"
+    />
+    @if (memberForm.get('name')?.invalid && memberForm.get('name')?.touched) {
+      <div class="text-red-500 text-sm">El nombre es requerido</div>
+    }
+  </div>
+
+  <!-- Gender selector -->
+  <div class="space-y-2">
+    <label class="block text-sm font-medium text-gray-700">Género</label>
+    <div class="gender-toggle">
+      <button
+        type="button"
+        (click)="selectGender('M')"
+        [class.active]="gender === 'M'"
+        class="gender-option"
+      >
+        Masculino
+      </button>
+      <button
+        type="button"
+        (click)="selectGender('F')"
+        [class.active]="gender === 'F'"
+        class="gender-option"
+      >
+        Femenino
+      </button>
+    </div>
+  </div>
+
+  <!-- Group selector -->
+  <div class="space-y-2">
+    <label for="group" class="block text-sm font-medium text-gray-700">Grupo</label>
+    @if (isLoading) {
+      <div class="flex items-center gap-2 text-gray-500 text-sm">
+        <lucide-icon [img]="LoaderIcon" class="w-4 h-4 animate-spin"></lucide-icon>
+        Cargando grupos...
+      </div>
+    } @else {
+      <select
+        id="group"
+        formControlName="groupId"
+        name="groupId"
+        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-white"
+        [class.error]="memberForm.get('groupId')?.invalid && memberForm.get('groupId')?.touched"
+      >
+        @for (group of groups; track group.id) {
+          <option [value]="group.id">{{ group.name }}</option>
+        }
+      </select>
+    }
+    @if (memberForm.get('groupId')?.invalid && memberForm.get('groupId')?.touched) {
+      <div class="text-red-500 text-sm">El grupo es requerido</div>
+    }
+  </div>
+
+  <!-- Action buttons -->
+  <div class="flex gap-3 pt-2">
+    <button
+      type="button"
+      (click)="onCancel()"
+      class="flex-1 px-4 py-3 border border-gray-200 rounded-xl text-gray-600 font-medium hover:bg-gray-50 transition-colors cursor-pointer"
+      [disabled]="isSaving"
+    >
+      Cancelar
+    </button>
+    <button
+      type="submit"
+      class="flex-1 px-4 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
+      [disabled]="isSaving || isLoading"
+    >
+      @if (isSaving) {
+        <lucide-icon [img]="LoaderIcon" class="w-4 h-4 animate-spin"></lucide-icon>
+        Guardando...
+      } @else {
+        Guardar
+      }
+    </button>
+  </div>
+</form>
