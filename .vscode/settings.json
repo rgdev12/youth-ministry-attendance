@@ -1,0 +1,19 @@
+{
+  "tailwindCSS.includeLanguages": {
+    "html": "html",
+    "angular": "html"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "ngClass",
+    "[class]"
+  ],
+  "tailwindCSS.emmetCompletions": true,
+  "files.associations": {
+    "*.html": "html"
+  }
+}

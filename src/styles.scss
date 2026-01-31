@@ -1,0 +1,15 @@
+@use "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+
+  /* Custom Colors - Use with bg-primary, text-secondary, etc. */
+  --color-primary: #2C50A5;
+  --color-primary-light: #2C50A5;
+
+  --color-secondary: #175830;
+  --color-secondary-light: #175830;
+
+  --color-accent: #FBFF0A;
+  --color-accent-light: #FBFF0A;
+}
