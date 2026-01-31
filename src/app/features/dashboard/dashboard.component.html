@@ -1,17 +1,28 @@
 <app-main-layout>
   <!-- Welcome Card -->
   <div class="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 py-5">
-    <h2 class="text-2xl font-bold text-primary mb-2">
-      {{ greeting }}
-    </h2>
-    <p class="text-gray-500 text-sm">
-      Selecciona un grupo para registrar asistencias.
-    </p>
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-2xl font-bold text-primary mb-2">
+          Bienvenido
+        </h2>
+        <p class="text-gray-500 text-sm">
+          Selecciona un grupo para registrar asistencias.
+        </p>
+      </div>
+
+      <button 
+        (click)="openNewMemberModal()"
+        class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer sm:flex hidden">
+        <lucide-icon [img]="UserPlusIcon" class="w-5 h-5"></lucide-icon>
+        <span class="hidden sm:inline">Nuevo Miembro</span>
+      </button>
+    </div>
   </div>
 
   <!-- Quick Stats -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="rounded-lg border border-primary">
+    <div class="rounded-lg border border-primary cursor-pointer">
       <img src="assets/images/jovenes-img.jpg" alt="Jóvenes IMG" class="w-full h-48 object-cover rounded-t-lg">
       
       <div class="p-4">
@@ -23,7 +34,7 @@
       </div>
     </div>
 
-    <div class="rounded-lg border border-secondary">
+    <div class="rounded-lg border border-secondary cursor-pointer">
       <img src="assets/images/pre-img.jpg" alt="Pre-Jóvenes IMG" class="w-full h-48 object-cover rounded-t-lg">
       
       <div class="p-4">
@@ -35,4 +46,22 @@
       </div>
     </div>
   </div>
+
+  <button 
+    (click)="openNewMemberModal()"
+    class="flex items-center justify-center gap-2 px-4 py-2 mt-5 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer sm:hidden w-full">
+    <lucide-icon [img]="UserPlusIcon" class="w-5 h-5"></lucide-icon>
+    <span>Nuevo Miembro</span>
+  </button>
 </app-main-layout>
+
+<!-- New Member Modal -->
+<app-modal 
+  [isOpen]="isNewMemberModalOpen" 
+  title="Nuevo Miembro"
+  (closed)="closeNewMemberModal()">
+  <app-new-member-form
+    (saved)="onMemberSaved($event)"
+    (cancelled)="closeNewMemberModal()">
+  </app-new-member-form>
+</app-modal>
