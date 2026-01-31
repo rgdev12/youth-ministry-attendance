@@ -1,34 +1,6 @@
 <div class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
   <!-- Header -->
-  <header class="backdrop-blur-lg border-b border-white/10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <div class="flex items-center gap-3">
-          <lucide-icon [img]="UsersIcon" class="w-8 h-8 text-purple-400"></lucide-icon>
-          <h1 class="text-xl font-bold text-white">Youth Ministry Attendance</h1>
-        </div>
-        
-        <div class="flex items-center gap-4">
-          @if (profile()) {
-            <div class="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-lg">
-              <lucide-icon [img]="UserIcon" class="w-4 h-4 text-purple-300"></lucide-icon>
-              <span class="text-sm text-purple-200">{{ profile()?.email }}</span>
-              <span class="px-2 py-0.5 text-xs rounded-full {{ profile()?.role === 'admin' ? 'bg-purple-500 text-white' : 'bg-gray-600 text-gray-200' }}">
-                {{ profile()?.role }}
-              </span>
-            </div>
-          }
-          <button
-            (click)="signOut()"
-            class="flex items-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 hover:text-red-200 rounded-lg transition-all"
-          >
-            <lucide-icon [img]="LogOutIcon" class="w-4 h-4"></lucide-icon>
-            <span class="text-sm font-medium">Cerrar Sesión</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </header>
+  <app-header></app-header>
 
   <!-- Main Content -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
