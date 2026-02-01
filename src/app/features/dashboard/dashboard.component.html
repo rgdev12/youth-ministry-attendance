@@ -22,7 +22,7 @@
 
   <!-- Quick Stats -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="rounded-lg border border-primary cursor-pointer">
+    <div class="rounded-lg border border-primary cursor-pointer" (click)="goToAttendances('jovenes')">
       <img src="assets/images/jovenes-img.jpg" alt="Jóvenes IMG" class="w-full h-48 object-cover rounded-t-lg">
       
       <div class="p-4">
@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <div class="rounded-lg border border-secondary cursor-pointer">
+    <div class="rounded-lg border border-secondary cursor-pointer" (click)="goToAttendances('pre-jovenes')">
       <img src="assets/images/pre-img.jpg" alt="Pre-Jóvenes IMG" class="w-full h-48 object-cover rounded-t-lg">
       
       <div class="p-4">

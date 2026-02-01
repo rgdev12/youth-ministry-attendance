@@ -6,6 +6,7 @@ import { MainLayout } from '@shared/layouts/main-layout/main-layout.component';
 import { ModalComponent } from '@shared/components/modal/modal.component';
 import { NewMemberFormComponent } from '@shared/components/new-member-form/new-member-form.component';
 import { Member } from '@core/models/member.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -31,6 +32,8 @@ export default class DashboardComponent {
   // Modal state
   isNewMemberModalOpen = false;
 
+  constructor(private router: Router) {}
+
   async signOut() {
     await this.authService.signOut();
   }
@@ -47,5 +50,10 @@ export default class DashboardComponent {
     console.log('Nuevo miembro creado:', member);
     this.closeNewMemberModal();
     // TODO: Show success notification or refresh member list
+  }
+
+  goToAttendances(group: string): void {
+    console.log(group);
+    this.router.navigate(['/attendances', group]);
   }
 }
