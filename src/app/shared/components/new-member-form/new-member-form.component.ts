@@ -7,11 +7,14 @@ import { MemberService } from '@core/services/member.service';
 import { Group } from '@core/models/group.model';
 import { Member } from '@core/models/member.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
+import { Select } from 'primeng/select';
+import { SelectButton } from 'primeng/selectbutton';
 
 @Component({
   selector: 'app-new-member-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule, ReactiveFormsModule, InputTextModule, Select, SelectButton],
   templateUrl: './new-member-form.component.html',
   styleUrl: './new-member-form.component.scss'
 })
@@ -30,6 +33,12 @@ export class NewMemberFormComponent implements OnInit {
   gender: 'M' | 'F' = 'M';
   groupId = '';
 
+  // Gender options for SelectButton
+  genderOptions = [
+    { label: 'Masculino', value: 'M' },
+    { label: 'Femenino', value: 'F' }
+  ];
+
   // Data
   groups: Group[] = [];
   
@@ -45,7 +54,7 @@ export class NewMemberFormComponent implements OnInit {
     this.memberForm = this.fb.group({
       name: ['', Validators.required],
       gender: ['M', Validators.required],
-      groupId: [1, Validators.required]
+      groupId: [null, Validators.required]
     });
   }
 

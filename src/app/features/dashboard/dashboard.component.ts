@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { LucideAngularModule, Users, LogOut, User, Calendar, ChevronRight, UserPlus } from 'lucide-angular';
 import { AuthService } from '../../core/services/auth.service';
 import { MainLayout } from '@shared/layouts/main-layout/main-layout.component';
-import { ModalComponent } from '@shared/components/modal/modal.component';
+import { Dialog } from 'primeng/dialog';
 import { NewMemberFormComponent } from '@shared/components/new-member-form/new-member-form.component';
 import { Member } from '@core/models/member.model';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule, MainLayout, ModalComponent, NewMemberFormComponent],
+  imports: [CommonModule, LucideAngularModule, MainLayout, Dialog, NewMemberFormComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })

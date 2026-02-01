@@ -35,6 +35,6 @@ export class Header {
   async logout(): Promise<void> {
     this.closeMenu();
     await this.authService.signOut();
-    this.router.navigate(['/auth/login']);
+    // this.router.navigate(['/auth/login']);
   }
 }

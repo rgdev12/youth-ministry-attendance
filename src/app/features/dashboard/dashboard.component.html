@@ -49,19 +49,22 @@
 
   <button 
     (click)="openNewMemberModal()"
-    class="flex items-center justify-center gap-2 px-4 py-2 mt-5 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer sm:hidden w-full">
+    class="flex items-center justify-center gap-2 px-4 py-2 mt-8 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer sm:hidden w-full">
     <lucide-icon [img]="UserPlusIcon" class="w-5 h-5"></lucide-icon>
     <span>Nuevo Miembro</span>
   </button>
 </app-main-layout>
 
 <!-- New Member Modal -->
-<app-modal 
-  [isOpen]="isNewMemberModalOpen" 
-  title="Nuevo Miembro"
-  (closed)="closeNewMemberModal()">
+<p-dialog 
+  header="Nuevo Miembro"
+  [(visible)]="isNewMemberModalOpen" 
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '28rem', margin: '0 10px' }">
   <app-new-member-form
     (saved)="onMemberSaved($event)"
     (cancelled)="closeNewMemberModal()">
   </app-new-member-form>
-</app-modal>
+</p-dialog>
+
