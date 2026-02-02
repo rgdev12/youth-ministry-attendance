@@ -50,7 +50,6 @@ export default class DashboardComponent {
   }
 
   onMemberSaved(member: Member): void {
-    console.log('Nuevo miembro creado:', member);
     this.closeNewMemberModal();
     // TODO: Show success notification or refresh member list
   }

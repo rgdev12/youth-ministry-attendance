@@ -1,5 +1,5 @@
 <app-main-layout>
-  <div class="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 py-3 sm:py-5">
+  <div class="px-5 2xl:px-0 py-5 min-h-[calc(100vh-80px)] flex flex-col">
     <div class="flex items-start justify-between">
       <div>
         <h2 class="text-2xl font-bold text-primary">
@@ -13,12 +13,112 @@
       <p-datepicker 
         [(ngModel)]="selectedDate"
         appendTo="body"
-        dateFormat="M d" 
-        placeholder="Oct 24"
+        dateFormat="M d"
         [showIcon]="true" 
         iconDisplay="input"
         inputStyleClass="!rounded-full !bg-blue-50 !border-blue-100 !font-bold !py-1.5 !px-4 !w-28 !text-sm !shadow-sm !focus:ring-2 !focus:ring-blue-200">
       </p-datepicker>
     </div>
+
+    <!-- Input para buscar miembros -->
+    <div class="relative my-5">
+      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+        <lucide-icon [img]="SearchIcon" class="w-5 h-5 text-gray-500"></lucide-icon>
+      </div>
+
+      <input
+        pInputText
+        type="text"
+        id="searchQuery"
+        [(ngModel)]="searchQuery"
+        name="searchQuery"
+        placeholder="Buscar miembro"
+        class="w-full !pl-12"
+      />
+    </div>
+
+    <!-- Members Header -->
+    <div class="flex items-center justify-between gap-2 mb-3 pb-3 border-b border-gray-200">
+      <div class="flex items-center gap-2">
+        <lucide-icon [img]="UsersIcon" class="w-5 h-5 text-primary"></lucide-icon>
+        <span class="text-sm font-semibold text-primary tracking-wide">
+          MIEMBROS ({{ members().length }})
+        </span>
+      </div>
+
+      <button
+        (click)="openNewMemberModal()"
+        class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer">
+        <lucide-icon [img]="UserPlusIcon" class="w-5 h-5"></lucide-icon>
+        <span class="hidden sm:inline">Nuevo Miembro</span>
+      </button>
+    </div>
+
+    <!-- Members List -->
+    <div class="grow overflow-y-auto mb-2">
+      @for (member of filteredMembers(); track member.id) {
+        <div class="flex items-center gap-3 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50/50 transition-colors">
+          <!-- Avatar with initials -->
+          <div 
+            class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 border-2 transition-all duration-300"
+            [class]="member.isPresent 
+              ? 'bg-gradient-to-br from-secondary to-secondary-light border-secondary-light' 
+              : 'bg-gradient-to-br from-gray-200 to-gray-300 border-gray-300'">
+            <span 
+              class="text-base font-bold tracking-wide"
+              [class]="member.isPresent ? 'text-white' : 'text-gray-600'">
+              {{ getInitials(member.name) }}
+            </span>
+          </div>
+
+          <!-- Member Info -->
+          <div class="flex-1 flex flex-col gap-0.5 min-w-0">
+            <span class="text-base font-semibold text-gray-800 truncate">
+              {{ member.name }}
+            </span>
+            <span 
+              class="text-xs"
+              [class]="member.isPresent ? 'text-secondary' : 'text-gray-400'">
+              {{ member.isPresent ? 'Presente' : 'Ausente' }}
+            </span>
+          </div>
+
+          <!-- Toggle Switch -->
+          <p-toggleswitch 
+            [(ngModel)]="member.isPresent"
+            class="flex-shrink-0 [--p-toggleswitch-checked-background:theme(colors.secondary)] [--p-toggleswitch-checked-hover-background:theme(colors.secondary)]">
+          </p-toggleswitch>
+        </div>
+      }
+    </div>
+
+    <!-- Summary Footer -->
+    <div class="border-t border-gray-200 pt-4">
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-sm font-medium text-gray-500">Resumen</span>
+        <div class="flex gap-4">
+          <span class="text-sm font-semibold text-secondary">{{ presentCount() }} Presentes</span>
+          <span class="text-sm text-gray-400">{{ absentCount() }} Ausentes</span>
+        </div>
+      </div>
+      
+      <button 
+        (click)="saveAttendance()"
+        class="w-full py-3 px-4 bg-gradient-to-r from-primary to-primary-light text-white border-none rounded-xl text-base font-semibold cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0">
+        Guardar Asistencia
+      </button>
+    </div>
   </div>
 </app-main-layout>
+
+<p-dialog 
+  header="Nuevo Miembro"
+  [(visible)]="isNewMemberModalOpen" 
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '28rem', margin: '0 10px' }">
+  <app-new-member-form
+    (saved)="onMemberSaved($event)"
+    (cancelled)="closeNewMemberModal()">
+  </app-new-member-form>
+</p-dialog>

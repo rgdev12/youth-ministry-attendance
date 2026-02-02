@@ -1,9 +1,9 @@
 <app-main-layout>
   <!-- Welcome Card -->
-  <div class="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 py-3 sm:py-5">
+  <div class="px-5 sm:px-0 py-5">
     <div class="flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold text-primary mb-2">
+        <h2 class="text-2xl font-bold text-primary mb-1">
           Bienvenido
         </h2>
         <p class="text-gray-500 text-sm">
@@ -21,7 +21,7 @@
   </div>
 
   <!-- Quick Stats -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-5 sm:px-0">
     <div
       *ngFor="let group of groups()"
       class="rounded-lg border border-primary cursor-pointer"
@@ -39,12 +39,14 @@
     </div>
   </div>
 
-  <button 
-    (click)="openNewMemberModal()"
-    class="flex items-center justify-center gap-2 px-4 py-2 mt-8 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer sm:hidden w-full">
-    <lucide-icon [img]="UserPlusIcon" class="w-5 h-5"></lucide-icon>
-    <span>Nuevo Miembro</span>
-  </button>
+  <div class="px-5 sm:px-0">
+    <button 
+      (click)="openNewMemberModal()"
+      class="flex items-center justify-center gap-2 py-3 px-4 mt-8 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer sm:hidden w-full">
+      <lucide-icon [img]="UserPlusIcon" class="w-5 h-5"></lucide-icon>
+      <span>Nuevo Miembro</span>
+    </button>
+  </div>
 </app-main-layout>
 
 <!-- New Member Modal -->
