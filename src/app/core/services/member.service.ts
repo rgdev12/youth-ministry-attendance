@@ -35,7 +35,7 @@ export class MemberService {
     return data || [];
   }
 
-  async getMembersByGroup(groupId: string): Promise<Member[]> {
+  async getMembersByGroup(groupId: number): Promise<Member[]> {
     const { data, error } = await this.supabase.client
       .from('members')
       .select('*')

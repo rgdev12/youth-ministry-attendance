@@ -1,6 +1,6 @@
 <app-main-layout>
   <!-- Welcome Card -->
-  <div class="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 py-5">
+  <div class="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 py-3 sm:py-5">
     <div class="flex items-center justify-between">
       <div>
         <h2 class="text-2xl font-bold text-primary mb-2">
@@ -22,27 +22,19 @@
 
   <!-- Quick Stats -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="rounded-lg border border-primary cursor-pointer" (click)="goToAttendances('jovenes')">
-      <img src="assets/images/jovenes-img.jpg" alt="Jóvenes IMG" class="w-full h-48 object-cover rounded-t-lg">
+    <div
+      *ngFor="let group of groups()"
+      class="rounded-lg border border-primary cursor-pointer"
+      (click)="goToAttendances(group.id)"
+    >
+      <img [src]="group.front_img" alt="Jóvenes IMG" class="w-full h-48 object-cover rounded-t-lg">
       
       <div class="p-4">
         <div class="flex items-center justify-between">
-          <h3 class="text-xl font-bold text-primary">Jóvenes</h3>
-          <lucide-icon [img]="ChevronRightIcon" class="w-6 h-6 text-primary"></lucide-icon>
+          <h3 class="text-xl font-bold" [style.color]="group.color">{{ group.name }}</h3>
+          <lucide-icon [img]="ChevronRightIcon" class="w-6 h-6" [style.color]="group.color"></lucide-icon>
         </div>
-        <p class="text-sm text-gray-500 mt-2">Registrar asistencia para el grupo de jóvenes.</p>
-      </div>
-    </div>
-
-    <div class="rounded-lg border border-secondary cursor-pointer" (click)="goToAttendances('pre-jovenes')">
-      <img src="assets/images/pre-img.jpg" alt="Pre-Jóvenes IMG" class="w-full h-48 object-cover rounded-t-lg">
-      
-      <div class="p-4">
-        <div class="flex items-center justify-between">
-          <h3 class="text-xl font-bold text-secondary">Pre-Jóvenes</h3>
-          <lucide-icon [img]="ChevronRightIcon" class="w-6 h-6 text-secondary"></lucide-icon>
-        </div>
-        <p class="text-sm text-gray-500 mt-2">Registrar asistencia para el grupo de Pre-Jóvenes.</p>
+        <p class="text-sm text-gray-500 mt-2">{{ group.description }}</p>
       </div>
     </div>
   </div>

@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, Users, LogOut, User, Calendar, ChevronRight, UserPlus } from 'lucide-angular';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '@core/services/auth.service';
 import { MainLayout } from '@shared/layouts/main-layout/main-layout.component';
 import { Dialog } from 'primeng/dialog';
 import { NewMemberFormComponent } from '@shared/components/new-member-form/new-member-form.component';
+import { GroupService } from '@core/services/group.service';
 import { Member } from '@core/models/member.model';
 import { Router } from '@angular/router';
 
@@ -17,6 +18,7 @@ import { Router } from '@angular/router';
 })
 export default class DashboardComponent {
   private authService = inject(AuthService);
+  private groupService = inject(GroupService);
 
   // Icons
   readonly UsersIcon = Users;
@@ -25,6 +27,7 @@ export default class DashboardComponent {
   readonly CalendarIcon = Calendar;
   readonly ChevronRightIcon = ChevronRight;
   readonly UserPlusIcon = UserPlus;
+  readonly groups = this.groupService.groups;
 
   // State from auth service
   readonly profile = this.authService.profile;
@@ -53,7 +56,6 @@ export default class DashboardComponent {
   }
 
   goToAttendances(group: string): void {
-    console.log(group);
     this.router.navigate(['/attendances', group]);
   }
 }

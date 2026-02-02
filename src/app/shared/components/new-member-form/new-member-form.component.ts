@@ -1,10 +1,9 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, Loader2 } from 'lucide-angular';
 import { GroupService } from '@core/services/group.service';
 import { MemberService } from '@core/services/member.service';
-import { Group } from '@core/models/group.model';
 import { Member } from '@core/models/member.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -18,7 +17,7 @@ import { SelectButton } from 'primeng/selectbutton';
   templateUrl: './new-member-form.component.html',
   styleUrl: './new-member-form.component.scss'
 })
-export class NewMemberFormComponent implements OnInit {
+export class NewMemberFormComponent {
   @Output() saved = new EventEmitter<Member>();
   @Output() cancelled = new EventEmitter<void>();
 
@@ -39,11 +38,11 @@ export class NewMemberFormComponent implements OnInit {
     { label: 'Femenino', value: 'F' }
   ];
 
-  // Data
-  groups: Group[] = [];
+  // Groups from the service (cached globally)
+  readonly groups = this.groupService.groups;
+  readonly isGroupsLoading = this.groupService.loading;
   
   // UI state
-  isLoading = false;
   isSaving = false;
   error = '';
 
@@ -56,25 +55,6 @@ export class NewMemberFormComponent implements OnInit {
       gender: ['M', Validators.required],
       groupId: [null, Validators.required]
     });
-  }
-
-  async ngOnInit(): Promise<void> {
-    await this.loadGroups();
-  }
-
-  async loadGroups(): Promise<void> {
-    this.isLoading = true;
-    try {
-      this.groups = await this.groupService.getGroups();
-      if (this.groups.length > 0) {
-        this.groupId = this.groups[0].id;
-      }
-    } catch (err) {
-      this.error = 'Error al cargar los grupos';
-      console.error(err);
-    } finally {
-      this.isLoading = false;
-    }
   }
 
   selectGender(gender: 'M' | 'F'): void {

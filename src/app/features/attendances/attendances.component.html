@@ -1,14 +1,24 @@
 <app-main-layout>
-  <div class="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 py-5">
-    <div class="flex items-center justify-between">
+  <div class="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 py-3 sm:py-5">
+    <div class="flex items-start justify-between">
       <div>
-        <h2 class="text-2xl font-bold text-primary mb-1">
+        <h2 class="text-2xl font-bold text-primary">
           Tomar asistencia
         </h2>
-        <p class="text-gray-500 text-sm">
-          Registra las asistencias de los miembros.
+        <p class="text-primary-light text-sm">
+          Grupo de Jóvenes
         </p>
       </div>
+
+      <p-datepicker 
+        [(ngModel)]="selectedDate"
+        appendTo="body"
+        dateFormat="M d" 
+        placeholder="Oct 24"
+        [showIcon]="true" 
+        iconDisplay="input"
+        inputStyleClass="!rounded-full !bg-blue-50 !border-blue-100 !font-bold !py-1.5 !px-4 !w-28 !text-sm !shadow-sm !focus:ring-2 !focus:ring-blue-200">
+      </p-datepicker>
     </div>
   </div>
 </app-main-layout>
