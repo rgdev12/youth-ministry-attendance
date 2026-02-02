@@ -27,11 +27,6 @@ export class NewMemberFormComponent {
   // Icons
   readonly LoaderIcon = Loader2;
 
-  // Form state
-  name = '';
-  gender: 'M' | 'F' = 'M';
-  groupId = '';
-
   // Gender options for SelectButton
   genderOptions = [
     { label: 'Masculino', value: 'M' },
@@ -53,12 +48,8 @@ export class NewMemberFormComponent {
     this.memberForm = this.fb.group({
       name: ['', Validators.required],
       gender: ['M', Validators.required],
-      groupId: [null, Validators.required]
+      groupId: [1, Validators.required]
     });
-  }
-
-  selectGender(gender: 'M' | 'F'): void {
-    this.gender = gender;
   }
 
   async onSubmit(): Promise<void> {
@@ -93,6 +84,10 @@ export class NewMemberFormComponent {
 
   private resetForm(): void {
     this.memberForm.reset();
+    this.memberForm.patchValue({
+      gender: 'M',
+      groupId: 1
+    });
     this.error = '';
   }
 }

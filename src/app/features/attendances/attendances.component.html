@@ -115,7 +115,7 @@
   header="Nuevo Miembro"
   [(visible)]="isNewMemberModalOpen" 
   [modal]="true"
-  [closable]="true"
+  [closable]="false"
   [style]="{ width: '28rem', margin: '0 10px' }">
   <app-new-member-form
     (saved)="onMemberSaved($event)"
