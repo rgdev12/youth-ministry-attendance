@@ -55,7 +55,7 @@ export default class DashboardComponent {
     // TODO: Show success notification or refresh member list
   }
 
-  goToAttendances(group: string): void {
+  goToAttendances(group: number): void {
     this.router.navigate(['/attendances', group]);
   }
 }

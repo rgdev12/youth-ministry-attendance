@@ -55,13 +55,6 @@ export class GroupService {
   }
 
   /**
-   * Get a group by ID from the cached groups
-   */
-  getGroupById(id: string): Group | undefined {
-    return this._groups().find(group => group.id === id);
-  }
-
-  /**
    * Get a group by ID from the database (for cases where fresh data is needed)
    */
   async fetchGroupById(id: string): Promise<Group | null> {

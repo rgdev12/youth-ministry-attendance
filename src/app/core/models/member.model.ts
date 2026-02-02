@@ -1,7 +1,7 @@
 export interface Member {
-  id?: string;
+  id?: number;
   name: string;
   gender: 'M' | 'F';
-  group_id: string;
+  group_id: number;
   created_at?: string;
 }
