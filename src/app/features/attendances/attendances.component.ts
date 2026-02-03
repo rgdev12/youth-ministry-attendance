@@ -14,6 +14,7 @@ import { NewMemberFormComponent } from '@shared/components/new-member-form/new-m
 
 interface MemberAttendance extends Member {
   isPresent: boolean;
+  name: string;
 }
 
 @Component({
@@ -40,7 +41,7 @@ export default class Attendances {
     transform: numberAttribute 
   });
   selectedDate: Date = new Date();
-  searchQuery: string = '';
+  searchQuery = signal<string>('');
   isNewMemberModalOpen = false;
 
   // Icons
@@ -57,7 +58,7 @@ export default class Attendances {
 
   // Filtered members based on search query
   filteredMembers = computed(() => {
-    const query = this.searchQuery.toLowerCase().trim();
+    const query = this.searchQuery().toLowerCase().trim();
     if (!query) return this.members();
     return this.members().filter(m => m.name.toLowerCase().includes(query));
   });
@@ -84,8 +85,6 @@ export default class Attendances {
 
   /**
    * Get initials from a member's name
-   * Example: "Román Antonio González" -> "RA"
-   * Example: "Román González" -> "RG"
    */
   getInitials(name: string): string {
     const parts = name.trim().split(/\s+/);

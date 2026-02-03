@@ -30,7 +30,8 @@
         pInputText
         type="text"
         id="searchQuery"
-        [(ngModel)]="searchQuery"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
         name="searchQuery"
         placeholder="Buscar miembro"
         class="w-full !pl-12"
