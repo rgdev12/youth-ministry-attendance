@@ -11,7 +11,8 @@
       </div>
 
       <p-datepicker 
-        [(ngModel)]="selectedDate"
+        [ngModel]="selectedDate()"
+        (ngModelChange)="onDateChange($event)"
         appendTo="body"
         dateFormat="M d"
         [showIcon]="true" 
@@ -86,7 +87,8 @@
 
           <!-- Toggle Switch -->
           <p-toggleswitch 
-            [(ngModel)]="member.isPresent"
+            [ngModel]="member.isPresent"
+            (ngModelChange)="toggleAttendance(member.id)"
             class="flex-shrink-0 [--p-toggleswitch-checked-background:theme(colors.secondary)] [--p-toggleswitch-checked-hover-background:theme(colors.secondary)]">
           </p-toggleswitch>
         </div>
@@ -105,8 +107,9 @@
       
       <button 
         (click)="saveAttendance()"
-        class="w-full py-3 px-4 bg-gradient-to-r from-primary to-primary-light text-white border-none rounded-xl text-base font-semibold cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0">
-        Guardar Asistencia
+        [disabled]="isSaving()"
+        class="w-full py-3 px-4 bg-gradient-to-r from-primary to-primary-light text-white border-none rounded-xl text-base font-semibold cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0">
+        {{ isSaving() ? 'Guardando...' : 'Guardar Asistencia' }}
       </button>
     </div>
   </div>

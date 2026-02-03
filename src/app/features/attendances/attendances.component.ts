@@ -1,6 +1,7 @@
 import { Component, inject, input, numberAttribute, signal } from '@angular/core';
 import { MainLayout } from '@shared/layouts/main-layout/main-layout.component';
 import { MemberService } from '@core/services/member.service';
+import { AttendanceService } from '@core/services/attendance.service';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FormsModule } from '@angular/forms';
 import { computed, effect } from '@angular/core';
@@ -11,10 +12,10 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { Member } from '@core/models/member.model';
 import { Dialog } from 'primeng/dialog';
 import { NewMemberFormComponent } from '@shared/components/new-member-form/new-member-form.component';
+import { MessageService } from 'primeng/api';
 
 interface MemberAttendance extends Member {
   isPresent: boolean;
-  name: string;
 }
 
 @Component({
@@ -34,15 +35,19 @@ interface MemberAttendance extends Member {
 })
 export default class Attendances {
   private memberService = inject(MemberService);
+  private attendanceService = inject(AttendanceService);
   private groupService = inject(GroupService);
+  private messageService = inject(MessageService);
 
   groupId = input.required<number, string | number>({ 
     alias: 'group',
     transform: numberAttribute 
   });
-  selectedDate: Date = new Date();
+  
+  selectedDate = signal<Date>(new Date());
   searchQuery = signal<string>('');
   isNewMemberModalOpen = false;
+  isSaving = signal<boolean>(false);
 
   // Icons
   readonly SearchIcon = Search;
@@ -74,13 +79,43 @@ export default class Attendances {
   });
 
   constructor() {
+    // Load members and their attendance status when groupId or selectedDate changes
     effect(() => {
-      const id = this.groupId();
-      this.memberService.getMembersByGroup(id).then(members => {
-        // Initialize all members as absent by default
-        this.members.set(members.map(m => ({ ...m, isPresent: false })));
-      });
+      const groupId = this.groupId();
+      const date = this.selectedDate();
+      this.loadMembersWithAttendance(groupId, date);
     });
+  }
+
+  /**
+   * Load members and mark those with existing attendance for the selected date
+   */
+  private async loadMembersWithAttendance(groupId: number, date: Date): Promise<void> {
+    const dateStr = this.formatDate(date);
+    
+    const [members, attendances] = await Promise.all([
+      this.memberService.getMembersByGroup(groupId),
+      this.attendanceService.getAttendancesByDateAndGroup(dateStr, groupId)
+    ]);
+
+    // Create a Set of member IDs that have attendance
+    const presentMemberIds = new Set(attendances.map(a => a.member_id));
+
+    // Map members with their attendance status
+    this.members.set(members.map(m => ({
+      ...m,
+      isPresent: presentMemberIds.has(m.id!)
+    })));
+  }
+
+  /**
+   * Format date to YYYY-MM-DD string for database queries
+   */
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   /**
@@ -105,16 +140,47 @@ export default class Attendances {
   }
 
   /**
-   * Save attendance records
+   * Save attendance records using the bulk_take_attendance RPC function
    */
-  saveAttendance(): void {
-    const attendanceData = this.members().map(m => ({
-      member_id: m.id,
-      date: this.selectedDate,
-      is_present: m.isPresent
-    }));
-    console.log('Guardando asistencia:', attendanceData);
-    // TODO: Implement actual save logic
+  async saveAttendance(): Promise<void> {
+    if (this.isSaving()) return;
+
+    const presentMemberIds = this.members()
+      .filter(m => m.isPresent && m.id)
+      .map(m => m.id!);
+
+    const dateStr = this.formatDate(this.selectedDate());
+    const groupId = this.groupId();
+
+    this.isSaving.set(true);
+
+    try {
+      await this.attendanceService.bulkTakeAttendance(presentMemberIds, dateStr, groupId);
+      
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: `Asistencia guardada: ${presentMemberIds.length} presentes`,
+        life: 3000
+      });
+    } catch (error) {
+      console.error('Error saving attendance:', error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudo guardar la asistencia',
+        life: 5000
+      });
+    } finally {
+      this.isSaving.set(false);
+    }
+  }
+
+  /**
+   * Handle date change from datepicker
+   */
+  onDateChange(date: Date): void {
+    this.selectedDate.set(date);
   }
 
   openNewMemberModal(): void {
@@ -127,8 +193,6 @@ export default class Attendances {
 
   onMemberSaved(member: Member): void {
     this.closeNewMemberModal();
-    this.memberService.getMembersByGroup(this.groupId()).then(members => {
-      this.members.set(members.map(m => ({ ...m, isPresent: false })));
-    });
+    this.loadMembersWithAttendance(this.groupId(), this.selectedDate());
   }
 }
