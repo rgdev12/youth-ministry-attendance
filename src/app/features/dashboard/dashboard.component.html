@@ -24,7 +24,8 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-5 sm:px-0">
     <div
       *ngFor="let group of groups()"
-      class="rounded-lg border border-primary cursor-pointer"
+      class="rounded-lg border cursor-pointer"
+      [style.border-color]="group.color"
       (click)="goToAttendances(group.id)"
     >
       <img [src]="group.front_img" alt="Jóvenes IMG" class="w-full h-48 object-cover rounded-t-lg">
@@ -39,10 +40,10 @@
     </div>
   </div>
 
-  <div class="px-5 sm:px-0">
+  <div class="px-5 sm:px-0 sm:mb-0 my-5">
     <button 
       (click)="openNewMemberModal()"
-      class="flex items-center justify-center gap-2 py-3 px-4 mt-8 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer sm:hidden w-full">
+      class="flex items-center justify-center gap-2 py-3 px-4 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer sm:hidden w-full">
       <lucide-icon [img]="UserPlusIcon" class="w-5 h-5"></lucide-icon>
       <span>Nuevo Miembro</span>
     </button>

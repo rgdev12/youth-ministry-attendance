@@ -3,11 +3,12 @@ import { MainLayout } from '@shared/layouts/main-layout/main-layout.component';
 import { MemberService } from '@core/services/member.service';
 import { AttendanceService } from '@core/services/attendance.service';
 import { DatePickerModule } from 'primeng/datepicker';
+import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { computed, effect } from '@angular/core';
 import { GroupService } from '@core/services/group.service';
 import { InputTextModule } from 'primeng/inputtext';
-import { LucideAngularModule, Search, Users, UserPlus } from 'lucide-angular';
+import { LucideAngularModule, Search, Users, UserPlus, ArrowLeft } from 'lucide-angular';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { Member } from '@core/models/member.model';
 import { Dialog } from 'primeng/dialog';
@@ -28,7 +29,8 @@ interface MemberAttendance extends Member {
     LucideAngularModule, 
     ToggleSwitchModule, 
     Dialog, 
-    NewMemberFormComponent
+    NewMemberFormComponent,
+    RouterLink
   ],
   templateUrl: './attendances.component.html',
   styleUrl: './attendances.component.scss',
@@ -53,6 +55,7 @@ export default class Attendances {
   readonly SearchIcon = Search;
   readonly UsersIcon = Users;
   readonly UserPlusIcon = UserPlus;
+  readonly ArrowLeftIcon = ArrowLeft;
 
   // Members with attendance status
   members = signal<MemberAttendance[]>([]);
