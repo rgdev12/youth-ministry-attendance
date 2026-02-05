@@ -1,0 +1,40 @@
+<app-main-layout>
+  <div class="px-5 2xl:px-0 py-5 flex flex-col overflow-hidden">
+    <!-- Back Button -->
+    <button class="w-fit">
+      <a routerLink="/dashboard" class="flex items-center gap-2">
+        <lucide-icon [img]="ArrowLeftIcon" class="w-5 h-5 text-primary"></lucide-icon>
+        <span class="text-primary-light text-sm">Volver</span>
+      </a>
+    </button>
+
+    <!-- Header -->
+    <div class="flex items-start justify-between pb-2 border-b border-gray-200">
+      <h2 class="text-2xl font-bold text-[#1E293B]">
+        Estadísticas
+      </h2>
+    </div>
+
+    <!-- Chips filters -->
+    <div class="flex flex-wrap gap-2 mt-4">
+      <button
+        [class]="selectedTimeRange() === 'today' 
+          ? 'bg-primary text-white shadow-md' 
+          : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'"
+        (click)="selectTimeRange('today')"
+        class="px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200">Hoy</button>
+      <button
+        [class]="selectedTimeRange() === 'last2weeks' 
+          ? 'bg-primary text-white shadow-md' 
+          : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'"
+        (click)="selectTimeRange('last2weeks')"
+        class="px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200">Últimas 2 semanas</button>
+      <button
+        [class]="selectedTimeRange() === 'lastmonth' 
+          ? 'bg-primary text-white shadow-md' 
+          : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'"
+        (click)="selectTimeRange('lastmonth')"
+        class="px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200">Último mes</button>
+    </div>
+  </div>
+</app-main-layout>
