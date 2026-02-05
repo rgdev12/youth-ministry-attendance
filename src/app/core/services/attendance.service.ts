@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from './supabase.service';
-import { Attendance } from '../models/attendance.model';
+import { Attendance } from '@core/models/attendance.model';
+import { AttendanceReportItem } from '@core/models/attendance-report.model';
 
 @Injectable({
   providedIn: 'root'
@@ -42,4 +43,29 @@ export class AttendanceService {
       throw error;
     }
   }
+
+  /**
+   * Get attendance report for a date range and optional group filter
+   * @param startDate Start date in YYYY-MM-DD format
+   * @param endDate End date in YYYY-MM-DD format
+   * @param groupFilterId Optional group ID to filter results
+   */
+  async getAttendanceReport(
+    startDate: string, 
+    endDate: string, 
+    groupFilterId?: number
+  ): Promise<AttendanceReportItem[]> {
+    const { data, error } = await this.supabase.client.rpc('get_attendance_report', {
+      start_date: startDate,
+      end_date: endDate,
+      group_filter_id: groupFilterId ?? null
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    return data || [];
+  }
 }
+
