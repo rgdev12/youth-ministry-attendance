@@ -2,7 +2,7 @@ import { Component, inject, signal, computed, effect } from '@angular/core';
 import { MainLayout } from '@shared/layouts/main-layout/main-layout.component';
 import { AttendanceService } from '@core/services/attendance.service';
 import { GroupService } from '@core/services/group.service';
-import { AttendanceReportItem } from '@core/models/attendance-report.model';
+import { AttendanceReportItem } from '@core/models/attendance.model';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
