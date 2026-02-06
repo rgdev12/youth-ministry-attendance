@@ -24,7 +24,7 @@ export default class StatsComponent {
   private messageService = inject(MessageService);
 
   isLoading = signal<boolean>(false);
-  selectedTimeRange = signal<string>('today');
+  selectedTimeRange = signal<string>('last2weeks');
   startDate = signal<Date>(new Date());
   endDate = signal<Date>(new Date());
   statsData = signal<DashboardStats | null>(null);
@@ -102,6 +102,8 @@ export default class StatsComponent {
   barChartData = computed(() => {
     const data = this.statsData();
     if (!data) return null;
+    if (data.summary.attendance_jovenes === 0 && data.summary.attendance_prejovenes === 0) return null;
+
     return {
       labels: ['Jóvenes', 'Pre-Jóvenes'],
       datasets: [
@@ -120,6 +122,8 @@ export default class StatsComponent {
   pieChartData = computed(() => {
     const data = this.statsData();
     if (!data) return null;
+    if (!data.by_gender) return null;
+
     return {
       labels: ['Varones', 'Señoritas'],
       datasets: [
@@ -136,6 +140,8 @@ export default class StatsComponent {
   lineChartData = computed(() => {
     const data = this.statsData();
     if (!data) return null;
+    if (!data.timeline) return null;
+
     return {
       labels: data.timeline.map(t => t.date),
       datasets: [
@@ -164,12 +170,15 @@ export default class StatsComponent {
   constructor() {
     effect(() => {
       const start = this.startDate();
+      start.setDate(start.getDate() - 14);
       const end = this.endDate();
       this.loadStatistics(start, end);
     });
   }
 
   selectTimeRange(timeRange: string): void {
+    this.statsData.set(null);
+
     const today = new Date();
     const last2weeks = new Date(today);
     last2weeks.setDate(today.getDate() - 14);

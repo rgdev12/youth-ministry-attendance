@@ -1,5 +1,5 @@
 <app-main-layout>
-  <div class="px-5 2xl:px-0 py-5 h-[calc(100vh-80px)] flex flex-col overflow-hidden">
+  <div class="px-5 lg:px-0 py-5 h-[calc(100vh-80px)] flex flex-col overflow-hidden lg:max-w-3xl lg:mx-auto">
     <button class="w-fit">
       <a routerLink="/dashboard" class="flex items-center gap-2 ">
         <lucide-icon [img]="ArrowLeftIcon" class="w-5 h-5 text-primary"></lucide-icon>
@@ -29,7 +29,7 @@
     </div>
 
     <!-- Input para buscar miembros -->
-    <div class="relative my-5">
+    <div class="relative my-5 lg:max-w-md">
       <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
         <lucide-icon [img]="SearchIcon" class="w-5 h-5 text-gray-500"></lucide-icon>
       </div>
@@ -65,41 +65,43 @@
 
     <!-- Members List -->
     <div class="flex-1 overflow-y-auto mb-2 min-h-0 shadow-scroll">
-      @for (member of filteredMembers(); track member.id) {
-        <div class="flex items-center gap-3 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50/50 transition-colors">
-          <!-- Avatar with initials -->
-          <div 
-            class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 border-2 transition-all duration-300"
-            [class]="member.isPresent 
-              ? 'bg-gradient-to-br from-secondary to-secondary-light border-secondary-light' 
-              : 'bg-gradient-to-br from-gray-200 to-gray-300 border-gray-300'">
-            <span 
-              class="text-base font-bold tracking-wide"
-              [class]="member.isPresent ? 'text-white' : 'text-gray-600'">
-              {{ getInitials(member.name) }}
-            </span>
-          </div>
+      <div class="lg:grid lg:grid-cols-2 lg:gap-x-4">
+        @for (member of filteredMembers(); track member.id) {
+          <div class="flex items-center gap-3 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50/50 transition-colors">
+            <!-- Avatar with initials -->
+            <div 
+              class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 border-2 transition-all duration-300"
+              [class]="member.isPresent 
+                ? 'bg-gradient-to-br from-secondary to-secondary-light border-secondary-light' 
+                : 'bg-gradient-to-br from-gray-200 to-gray-300 border-gray-300'">
+              <span 
+                class="text-base font-bold tracking-wide"
+                [class]="member.isPresent ? 'text-white' : 'text-gray-600'">
+                {{ getInitials(member.name) }}
+              </span>
+            </div>
 
-          <!-- Member Info -->
-          <div class="flex-1 flex flex-col gap-0.5 min-w-0">
-            <span class="text-base font-semibold text-gray-800 truncate">
-              {{ member.name }}
-            </span>
-            <span 
-              class="text-xs"
-              [class]="member.isPresent ? 'text-secondary' : 'text-gray-400'">
-              {{ member.isPresent ? 'Presente' : 'Ausente' }}
-            </span>
-          </div>
+            <!-- Member Info -->
+            <div class="flex-1 flex flex-col gap-0.5 min-w-0">
+              <span class="text-base font-semibold text-gray-800 truncate">
+                {{ member.name }}
+              </span>
+              <span 
+                class="text-xs"
+                [class]="member.isPresent ? 'text-secondary' : 'text-gray-400'">
+                {{ member.isPresent ? 'Presente' : 'Ausente' }}
+              </span>
+            </div>
 
-          <!-- Toggle Switch -->
-          <p-toggleswitch 
-            [ngModel]="member.isPresent"
-            (ngModelChange)="toggleAttendance(member.id)"
-            class="flex-shrink-0 [--p-toggleswitch-checked-background:theme(colors.secondary)] [--p-toggleswitch-checked-hover-background:theme(colors.secondary)]">
-          </p-toggleswitch>
-        </div>
-      }
+            <!-- Toggle Switch -->
+            <p-toggleswitch 
+              [ngModel]="member.isPresent"
+              (ngModelChange)="toggleAttendance(member.id)"
+              class="flex-shrink-0 [--p-toggleswitch-checked-background:theme(colors.secondary)] [--p-toggleswitch-checked-hover-background:theme(colors.secondary)]">
+            </p-toggleswitch>
+          </div>
+        }
+      </div>
     </div>
 
     <!-- Summary Footer -->
