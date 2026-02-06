@@ -1,0 +1,88 @@
+<form [formGroup]="memberForm" (ngSubmit)="onSubmit()" class="space-y-5">
+  <!-- Error message -->
+  @if (error) {
+    <div class="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
+      {{ error }}
+    </div>
+  }
+
+  <!-- Name field -->
+  <div class="space-y-2">
+    <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+    <input
+      pInputText
+      type="text"
+      id="name"
+      formControlName="name"
+      name="name"
+      autocomplete="off"
+      placeholder="Nombre del miembro"
+      class="w-full"
+      [class.error]="memberForm.get('name')?.invalid && memberForm.get('name')?.touched"
+    />
+    @if (memberForm.get('name')?.invalid && memberForm.get('name')?.touched) {
+      <div class="text-red-500 text-sm">El nombre es requerido</div>
+    }
+  </div>
+
+  <!-- Gender selector -->
+  <div class="space-y-2">
+    <span class="block text-sm font-medium text-gray-700">Género</span>
+    <p-selectbutton
+      [options]="genderOptions"
+      formControlName="gender"
+      optionLabel="label"
+      optionValue="value"
+      [allowEmpty]="false"
+    />
+  </div>
+
+  <!-- Group selector -->
+  <div class="space-y-2">
+    <span class="block text-sm font-medium text-gray-700">Grupo</span>
+    @if (isGroupsLoading()) {
+      <div class="flex items-center gap-2 text-gray-500 text-sm">
+        <lucide-icon [img]="LoaderIcon" class="w-4 h-4 animate-spin"></lucide-icon>
+        Cargando grupos...
+      </div>
+    } @else {
+      <p-select
+        id="group"
+        formControlName="groupId"
+        [options]="groups()"
+        optionLabel="name"
+        optionValue="id"
+        placeholder="Seleccionar grupo"
+        class="w-full"
+        [class.error]="memberForm.get('groupId')?.invalid && memberForm.get('groupId')?.touched"
+      />
+    }
+    @if (memberForm.get('groupId')?.invalid && memberForm.get('groupId')?.touched) {
+      <div class="text-red-500 text-sm">El grupo es requerido</div>
+    }
+  </div>
+
+  <!-- Action buttons -->
+  <div class="flex gap-3 pt-2">
+    <button
+      type="button"
+      (click)="onCancel()"
+      class="flex-1 px-4 py-3 border border-gray-200 rounded-xl text-gray-600 font-medium hover:bg-gray-50 transition-colors cursor-pointer"
+      [disabled]="isSaving"
+    >
+      Cancelar
+    </button>
+    <button
+      type="submit"
+      class="flex-1 px-4 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
+      [disabled]="isSaving || isGroupsLoading()"
+    >
+      @if (isSaving) {
+        <lucide-icon [img]="LoaderIcon" class="w-4 h-4 animate-spin"></lucide-icon>
+        Guardando...
+      } @else {
+        Guardar Cambios
+      }
+    </button>
+  </div>
+</form>

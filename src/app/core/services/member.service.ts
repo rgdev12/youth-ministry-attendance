@@ -48,4 +48,34 @@ export class MemberService {
 
     return data || [];
   }
+
+  async updateMember(id: number, member: Partial<Omit<Member, 'id' | 'created_at'>>): Promise<Member> {
+    const { data, error } = await this.supabase.client
+      .from('members')
+      .update(member)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  }
+
+  async setMemberActive(id: number, isActive: boolean): Promise<Member> {
+    const { data, error } = await this.supabase.client
+      .from('members')
+      .update({ is_active: isActive })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  }
 }

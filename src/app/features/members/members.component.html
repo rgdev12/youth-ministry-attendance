@@ -1,0 +1,266 @@
+<app-main-layout>
+  <div class="py-5 flex flex-col overflow-hidden min-h-screen">
+    <!-- Back Button -->
+    <button class="w-fit mx-5 lg:mx-auto lg:w-full lg:max-w-4xl">
+      <a routerLink="/dashboard" class="flex items-center gap-2">
+        <lucide-icon [img]="ArrowLeftIcon" class="w-5 h-5 text-primary"></lucide-icon>
+        <span class="text-primary-light text-sm">Volver</span>
+      </a>
+    </button>
+
+    <!-- Header -->
+    <div class="flex items-start justify-between pb-2 border-b border-gray-200 mx-5 lg:mx-auto lg:w-full lg:max-w-4xl">
+      <h2 class="text-2xl font-bold text-[#1E293B]">
+        Miembros
+      </h2>
+    </div>
+
+    <!-- Stats Cards Container -->
+    <div class="mt-4 mx-5 lg:mx-auto lg:w-full lg:max-w-4xl space-y-4">
+      
+      <!-- Total Members Card -->
+      <div class="bg-gradient-to-r from-primary to-primary-light rounded-2xl p-6 text-white shadow-lg">
+        <div class="flex flex-col items-center justify-center">
+          <span class="text-xs font-semibold tracking-widest opacity-90 uppercase">Miembros totales</span>
+          <span class="text-5xl font-bold mt-2">{{ totalMembersCount() }}</span>
+          @if (newMembersThisMonth() > 0) {
+            <div class="flex items-center gap-1 mt-2 text-sm opacity-90">
+              <lucide-icon [img]="TrendingUpIcon" class="w-4 h-4"></lucide-icon>
+              <span>+{{ newMembersThisMonth() }} este mes</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Groups and Gender Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- Groups Card -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-2 h-2 rounded-full bg-primary"></div>
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Groups</span>
+          </div>
+          <h3 class="text-lg font-bold text-gray-800 mb-4">Jóvenes y Pre</h3>
+          
+          <!-- Progress bar -->
+          <div class="h-3 rounded-full bg-gray-100 overflow-hidden flex">
+            @for (group of groups(); track group.id; let i = $index) {
+              <div 
+                class="h-full transition-all duration-300"
+                [style.width.%]="totalMembersCount() > 0 ? (membersByGroup()[group.id] / totalMembersCount()) * 100 : 50"
+                [style.background-color]="group.color || (i === 0 ? '#4161AF' : '#2C6743')">
+              </div>
+            }
+          </div>
+          
+          <!-- Labels -->
+          <div class="flex justify-between mt-3">
+            @for (group of groups(); track group.id; let i = $index) {
+              <div class="flex flex-col">
+                <span class="text-2xl font-bold" [style.color]="group.color || (i === 0 ? '#4161AF' : '#2C6743')">
+                  {{ membersByGroup()[group.id] || 0 }}
+                </span>
+                <span class="text-xs text-gray-500 uppercase">{{ group.name }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Gender Card -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-2 h-2 rounded-full bg-[#F473B7]"></div>
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Gender</span>
+          </div>
+          <h3 class="text-lg font-bold text-gray-800 mb-4">Distribution</h3>
+          
+          <!-- Progress bar -->
+          <div class="h-3 rounded-full bg-gray-100 overflow-hidden flex">
+            <div 
+              class="h-full bg-primary transition-all duration-300"
+              [style.width.%]="genderDistribution().malePercent">
+            </div>
+            <div 
+              class="h-full bg-[#F473B7] transition-all duration-300"
+              [style.width.%]="genderDistribution().femalePercent">
+            </div>
+          </div>
+          
+          <!-- Labels -->
+          <div class="flex justify-between mt-3">
+            <div class="flex flex-col">
+              <span class="text-2xl font-bold text-primary">{{ genderDistribution().malePercent }}%</span>
+              <span class="text-xs text-gray-500 uppercase">Male</span>
+            </div>
+            <div class="flex flex-col items-end">
+              <span class="text-2xl font-bold text-[#F473B7]">{{ genderDistribution().femalePercent }}%</span>
+              <span class="text-xs text-gray-500 uppercase">Female</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="mt-6 mx-5 lg:mx-auto lg:w-full lg:max-w-4xl">
+      <!-- Search Input -->
+      <div class="relative lg:max-w-md">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <lucide-icon [img]="SearchIcon" class="w-5 h-5 text-gray-500"></lucide-icon>
+        </div>
+        <input
+          pInputText
+          type="text"
+          id="searchQuery"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+          name="searchQuery"
+          placeholder="Buscar miembro"
+          class="w-full !pl-12"
+        />
+      </div>
+
+      <!-- Filter Chips -->
+      <div class="flex flex-wrap items-center gap-2 mt-4">
+        <!-- Group Chips -->
+        <button 
+          (click)="selectGroup(null)"
+          class="px-2 py-1.5 rounded-lg text-sm font-medium transition-all duration-200"
+          [class]="selectedGroupId() === null 
+            ? 'bg-primary text-white shadow-md' 
+            : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'">
+          Todos
+        </button>
+        @for (group of groups(); track group.id) {
+          <button 
+            (click)="selectGroup(group.id)"
+            class="px-2 py-1.5 rounded-lg text-sm font-medium transition-all duration-200"
+            [class]="selectedGroupId() === group.id 
+              ? 'bg-primary text-white shadow-md' 
+              : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'">
+            {{ group.name.slice(0, 7) }}
+          </button>
+        }
+
+        <!-- Divider -->
+        <div class="w-px h-6 bg-gray-300 mx-1"></div>
+
+        <!-- Show Inactive Toggle -->
+        <div class="flex items-center gap-2">
+          <p-toggleswitch 
+            [ngModel]="showInactive()"
+            (ngModelChange)="showInactive.set($event)">
+          </p-toggleswitch>
+          <span class="text-sm text-gray-600">Inactivos</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Members Header -->
+    <div class="flex items-center justify-between mt-8 mb-3 mx-5 lg:mx-auto lg:w-full lg:max-w-4xl">
+      <div class="flex items-center gap-2">
+        <lucide-icon [img]="UsersIcon" class="w-5 h-5 text-primary"></lucide-icon>
+        <span class="text-sm font-semibold text-primary tracking-wide">
+          MIEMBROS ({{ filteredMembers().length }})
+        </span>
+      </div>
+    </div>
+
+    <!-- Members List -->
+    <div class="flex-1 mx-5 mb-5 min-h-0 bg-white border border-gray-200 rounded-xl px-3 lg:mx-auto lg:w-full lg:max-w-4xl">
+      @if (isLoading()) {
+        <div class="flex items-center justify-center py-10">
+          <span class="text-gray-400">Cargando...</span>
+        </div>
+      } @else if (filteredMembers().length === 0) {
+        <div class="flex items-center justify-center py-10">
+          <span class="text-gray-400">No se encontraron miembros</span>
+        </div>
+      } @else {
+        <div class="lg:grid lg:grid-cols-2 lg:gap-x-4">
+          @for (member of filteredMembers(); track member.id) {
+            <div 
+              class="flex items-center gap-3 py-3 border-b border-gray-100 last:border-b-0 transition-colors"
+              [class.opacity-50]="member.is_active === false">
+              
+              <!-- Avatar with initials -->
+              <div 
+                class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 border-2 bg-gradient-to-br"
+                [class]="member.gender === 'M' 
+                  ? 'from-primary/20 to-primary/30 border-primary/30' 
+                  : 'from-[#F473B7]/20 to-[#F473B7]/30 border-[#F473B7]/30'">
+                <span 
+                  class="text-base font-bold tracking-wide"
+                  [class]="member.gender === 'M' ? 'text-primary' : 'text-[#F473B7]'">
+                  {{ getInitials(member.name) }}
+                </span>
+              </div>
+
+              <!-- Member Info -->
+              <div class="flex-1 flex flex-col gap-0.5 min-w-0">
+                <span class="text-base font-semibold text-gray-800 truncate">
+                  {{ member.name }}
+                </span>
+                <div class="flex items-center gap-2 text-xs">
+                  <span 
+                    class="px-2 py-0.5 rounded-full text-white"
+                    [style.background-color]="getGroupColor(member.group_id)">
+                    {{ getGroupName(member.group_id) }}
+                  </span>
+                  <span class="text-gray-500">
+                    {{ member.gender === 'M' ? 'Masculino' : 'Femenino' }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex items-center gap-1">
+                @if (member.is_active === false) {
+                  <!-- Reactivate Button -->
+                  <button 
+                    (click)="reactivateMember(member)"
+                    class="p-2 rounded-lg text-green-600 hover:bg-green-50 transition-colors cursor-pointer"
+                    title="Reactivar">
+                    <lucide-icon [img]="RestoreIcon" class="w-5 h-5"></lucide-icon>
+                  </button>
+                } @else {
+                  <!-- Edit Button -->
+                  <button 
+                    (click)="openEditModal(member)"
+                    class="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors cursor-pointer"
+                    title="Editar">
+                    <lucide-icon [img]="PencilIcon" class="w-5 h-5"></lucide-icon>
+                  </button>
+                  <!-- Deactivate Button -->
+                  <button 
+                    (click)="deactivateMember(member)"
+                    class="p-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+                    title="Eliminar">
+                    <lucide-icon [img]="TrashIcon" class="w-5 h-5"></lucide-icon>
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</app-main-layout>
+
+<!-- Edit Member Modal -->
+<p-dialog 
+  header="Editar Miembro"
+  [(visible)]="isEditModalOpen" 
+  [modal]="true"
+  [closable]="false"
+  [style]="{ width: '28rem', margin: '0 10px' }">
+  @if (selectedMember()) {
+    <app-edit-member-form
+      [member]="selectedMember()!"
+      (saved)="onMemberSaved($event)"
+      (cancelled)="closeEditModal()">
+    </app-edit-member-form>
+  }
+</p-dialog>

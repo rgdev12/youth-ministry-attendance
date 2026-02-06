@@ -3,5 +3,6 @@ export interface Member {
   name: string;
   gender: 'M' | 'F';
   group_id: number;
+  is_active?: boolean;
   created_at?: string;
 }

@@ -17,10 +17,10 @@
       <!-- Popover Menu -->
       <p-popover #op styleClass="[&::before]:hidden [&::after]:hidden">
         <div class="flex flex-col w-48">
-          <!-- <a routerLink="/change-password" (click)="op.hide()" class="flex items-center gap-3 py-2 text-sm text-gray-800 hover:bg-gray-100 transition-colors">
-            <lucide-icon [img]="LockIcon" class="w-4 h-4"></lucide-icon>
-            Cambiar contraseña
-          </a> -->
+          <a routerLink="/members" (click)="op.hide()" class="flex items-center gap-3 py-2 text-sm text-gray-800 hover:bg-gray-100 transition-colors">
+            <lucide-icon [img]="UserRoundIcon" class="w-4 h-4"></lucide-icon>
+            Lista de miembros
+          </a>
           <a routerLink="/reports" (click)="op.hide()" class="flex items-center gap-3 py-2 text-sm text-gray-800 hover:bg-gray-100 transition-colors">
             <lucide-icon [img]="FileTextIcon" class="w-4 h-4"></lucide-icon>
             Reportes

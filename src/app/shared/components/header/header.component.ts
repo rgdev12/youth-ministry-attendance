@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { LucideAngularModule, CircleUserRound , Lock, FileText, BarChart3, LogOut } from 'lucide-angular';
+import { LucideAngularModule, CircleUserRound, Lock, FileText, BarChart3, LogOut, UserRound } from 'lucide-angular';
 import { AuthService } from '@core/services/auth.service';
 import { Popover } from 'primeng/popover';
 
@@ -21,6 +21,7 @@ export class Header {
   FileTextIcon = FileText;
   BarChartIcon = BarChart3;
   LogOutIcon = LogOut;
+  UserRoundIcon = UserRound;
 
   async logout(): Promise<void> {
     await this.authService.signOut();
