@@ -7,7 +7,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
-import { LucideAngularModule, Search, Users, ArrowLeft, Download, AlertTriangle, Calendar, Clock } from 'lucide-angular';
+import { LucideAngularModule, Search, Users, ArrowLeft, Download, AlertTriangle, Calendar, Clock, Sheet } from 'lucide-angular';
 
 @Component({
   selector: 'app-reports',
@@ -34,6 +34,7 @@ export default class ReportsComponent {
   readonly AlertIcon = AlertTriangle;
   readonly CalendarIcon = Calendar;
   readonly ClockIcon = Clock;
+  readonly SheetIcon = Sheet;
 
   // State
   startDate = signal<Date>(this.getOneMonthAgo());
@@ -156,4 +157,129 @@ export default class ReportsComponent {
     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
     return date.toLocaleDateString('es-ES', options);
   }
+
+  /**
+   * Download report as Excel file
+   */
+  async downloadReport(): Promise<void> {
+    const ExcelJS = await import('exceljs');
+    const { saveAs } = await import('file-saver');
+
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = 'Youth Ministry Attendance';
+    workbook.created = new Date();
+
+    const worksheet = workbook.addWorksheet('Reporte de Asistencia');
+
+    // Title row
+    const startDateStr = this.formatDate(this.startDate());
+    const endDateStr = this.formatDate(this.endDate());
+    const groupName = this.selectedGroupName() || 'Todos los grupos';
+    
+    worksheet.mergeCells('A1:E1');
+    const titleCell = worksheet.getCell('A1');
+    titleCell.value = `Reporte de Asistencia - ${groupName}`;
+    titleCell.font = { bold: true, size: 16, color: { argb: 'FF2C50A5' } };
+    titleCell.alignment = { horizontal: 'center' };
+
+    worksheet.mergeCells('A2:E2');
+    const dateRangeCell = worksheet.getCell('A2');
+    dateRangeCell.value = `Período: ${startDateStr} al ${endDateStr}`;
+    dateRangeCell.font = { size: 11, color: { argb: 'FF666666' } };
+    dateRangeCell.alignment = { horizontal: 'center' };
+
+    // Empty row
+    worksheet.addRow([]);
+
+    // Headers
+    const headerRow = worksheet.addRow([
+      'Nombre',
+      'Género',
+      'Grupo',
+      'Asistencias',
+      'Última Asistencia'
+    ]);
+
+    headerRow.eachCell((cell) => {
+      cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FF2C50A5' }
+      };
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
+      cell.border = {
+        top: { style: 'thin' },
+        bottom: { style: 'thin' },
+        left: { style: 'thin' },
+        right: { style: 'thin' }
+      };
+    });
+
+    // Data rows
+    const data = this.filteredMembers();
+    const twoWeeksAgo = new Date();
+    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
+    data.forEach((member) => {
+      const lastAttendanceDate = member.last_attendance ? new Date(member.last_attendance) : null;
+      const isAbsentTwoWeeks = !lastAttendanceDate || lastAttendanceDate < twoWeeksAgo;
+
+      const row = worksheet.addRow([
+        member.full_name,
+        member.gender === 'M' ? 'Masculino' : 'Femenino',
+        member.group_name,
+        member.attendance_count,
+        member.last_attendance ? this.formatDisplayDate(member.last_attendance) : 'Sin registro'
+      ]);
+
+      row.eachCell((cell, colNumber) => {
+        cell.border = {
+          top: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+          bottom: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+          left: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+          right: { style: 'thin', color: { argb: 'FFE0E0E0' } }
+        };
+        
+        // Highlight 'Última Asistencia' in red if absent for 2+ weeks
+        if (colNumber === 5 && isAbsentTwoWeeks) {
+          cell.font = { bold: true, color: { argb: 'FFDC2626' } };
+        }
+        
+        // Center numeric and short columns
+        if (colNumber >= 2) {
+          cell.alignment = { horizontal: 'center' };
+        }
+      });
+    });
+
+    // Empty row before summary
+    worksheet.addRow([]);
+
+    // Summary section
+    const summaryHeaderRow = worksheet.addRow(['Resumen']);
+    summaryHeaderRow.getCell(1).font = { bold: true, size: 12 };
+
+    worksheet.addRow(['Total de miembros:', data.length]);
+    worksheet.addRow(['Con asistencia:', data.filter(m => m.attendance_count > 0).length]);
+
+    // Set column widths
+    worksheet.columns = [
+      { width: 30 }, // Nombre
+      { width: 12 }, // Género
+      { width: 15 }, // Grupo
+      { width: 12 }, // Asistencias
+      { width: 18 }  // Última Asistencia
+    ];
+
+    // Generate file
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { 
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+    });
+    
+    const fileName = `reporte_asistencia_${startDateStr}_${endDateStr}.xlsx`;
+    saveAs(blob, fileName);
+  }
 }
+

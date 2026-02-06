@@ -106,11 +106,18 @@
     </div>
 
     <!-- Members Header -->
-    <div class="flex items-center gap-2 mt-10 mb-3">
-      <lucide-icon [img]="UsersIcon" class="w-5 h-5 text-primary"></lucide-icon>
-      <span class="text-sm font-semibold text-primary tracking-wide">
-        MIEMBROS ({{ filteredMembers().length }})
-      </span>
+    <div class="flex items-center justify-between mt-10 mb-3">
+      <div class="flex items-center gap-2">
+        <lucide-icon [img]="UsersIcon" class="w-5 h-5 text-primary"></lucide-icon>
+        <span class="text-sm font-semibold text-primary tracking-wide">
+          MIEMBROS ({{ filteredMembers().length }})
+        </span>
+      </div>
+
+      <button (click)="downloadReport()" class="flex items-center gap-1 border border-secondary rounded-lg px-2 py-1 cursor-pointer hover:bg-secondary/10 transition-colors">
+        <lucide-icon [img]="SheetIcon" class="w-4 h-4 text-secondary"></lucide-icon>
+        <span class="text-sm text-secondary">Descargar Excel</span>
+      </button>
     </div>
 
     <!-- Members List -->
