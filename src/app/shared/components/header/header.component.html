@@ -1,28 +1,31 @@
 <header class="w-full bg-primary text-white px-5">
   <div class="container mx-auto flex items-center justify-between h-20">
-    <h1 class="text-xl font-semibold">Juventud Belén</h1>
+    <div class="flex items-center gap-2" routerLink="/">
+      <img src="assets/logos/jovenes-logo-1.svg" alt="Jóvenes Logo" class="w-10">
+      <h1 class="text-xl font-semibold">Juventud Belén</h1>
+    </div>
 
     <!-- User Menu -->
     <div class="relative">
       <button
-        (click)="toggleMenu()"
+        (click)="op.toggle($event)"
         class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/20 transition-colors cursor-pointer"
       >
         <lucide-icon [img]="UserIcon" class="w-6 h-6 text-white"></lucide-icon>
       </button>
 
-      <!-- Dropdown Menu -->
-      @if (isMenuOpen) {
-        <div class="absolute right-0 mt-2 w-48 rounded-lg shadow-lg bg-white border border-gray-200 py-2 z-50">
-          <a routerLink="/change-password" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-800 hover:bg-white/10 transition-colors">
+      <!-- Popover Menu -->
+      <p-popover #op styleClass="[&::before]:hidden [&::after]:hidden">
+        <div class="flex flex-col w-48">
+          <!-- <a routerLink="/change-password" (click)="op.hide()" class="flex items-center gap-3 py-2 text-sm text-gray-800 hover:bg-gray-100 transition-colors">
             <lucide-icon [img]="LockIcon" class="w-4 h-4"></lucide-icon>
             Cambiar contraseña
-          </a>
-          <a routerLink="/reports" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-800 hover:bg-white/10 transition-colors">
+          </a> -->
+          <a routerLink="/reports" (click)="op.hide()" class="flex items-center gap-3 py-2 text-sm text-gray-800 hover:bg-gray-100 transition-colors">
             <lucide-icon [img]="FileTextIcon" class="w-4 h-4"></lucide-icon>
             Reportes
           </a>
-          <a routerLink="/stats" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-800 hover:bg-white/10 transition-colors">
+          <a routerLink="/stats" (click)="op.hide()" class="flex items-center gap-3 py-2 text-sm text-gray-800 hover:bg-gray-100 transition-colors">
             <lucide-icon [img]="BarChartIcon" class="w-4 h-4"></lucide-icon>
             Estadísticas
           </a>
@@ -30,17 +33,12 @@
           <!-- Separator -->
           <div class="my-2 border-t border-gray-200"></div>
 
-          <button (click)="logout()" class="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-400 hover:bg-white/10 transition-colors cursor-pointer">
+          <button (click)="logout(); op.hide()" class="flex items-center gap-3 w-full py-2 text-sm text-red-400 hover:bg-gray-100 transition-colors cursor-pointer">
             <lucide-icon [img]="LogOutIcon" class="w-4 h-4"></lucide-icon>
             Cerrar sesión
           </button>
         </div>
-      }
+      </p-popover>
     </div>
   </div>
 </header>
-
-<!-- Overlay to close menu when clicking outside -->
-@if (isMenuOpen) {
-  <div class="fixed inset-0 z-40" (click)="closeMenu()"></div>
-}
