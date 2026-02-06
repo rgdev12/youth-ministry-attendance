@@ -21,7 +21,7 @@
     ]
   },
   "private": true,
-  "packageManager": "pnpm@10.26.2",
+  "packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264",
   "dependencies": {
     "@angular/animations": "^21.1.2",
     "@angular/common": "^21.1.0",
@@ -32,6 +32,7 @@
     "@angular/router": "^21.1.0",
     "@primeng/themes": "^21.0.4",
     "@supabase/supabase-js": "^2.93.3",
+    "chart.js": "^4.5.1",
     "lucide-angular": "^0.563.0",
     "primeicons": "^7.0.0",
     "primeng": "^21.1.1",
