@@ -1,7 +1,7 @@
 <app-main-layout>
-  <div class="px-5 2xl:px-0 py-5 flex flex-col overflow-hidden">
+  <div class="py-5 flex flex-col overflow-hidden bg-[#F5F7FA] min-h-screen">
     <!-- Back Button -->
-    <button class="w-fit">
+    <button class="w-fit mx-5">
       <a routerLink="/dashboard" class="flex items-center gap-2">
         <lucide-icon [img]="ArrowLeftIcon" class="w-5 h-5 text-primary"></lucide-icon>
         <span class="text-primary-light text-sm">Volver</span>
@@ -9,14 +9,14 @@
     </button>
 
     <!-- Header -->
-    <div class="flex items-start justify-between pb-2 border-b border-gray-200">
+    <div class="flex items-start justify-between pb-2 border-b border-gray-200 mx-5">
       <h2 class="text-2xl font-bold text-[#1E293B]">
         Estadísticas
       </h2>
     </div>
 
     <!-- Chips filters -->
-    <div class="flex flex-wrap gap-2 mt-4">
+    <div class="flex flex-wrap gap-2 mt-4 px-5">
       <button
         [class]="selectedTimeRange() === 'today' 
           ? 'bg-primary text-white shadow-md' 
@@ -36,5 +36,62 @@
         (click)="selectTimeRange('lastmonth')"
         class="px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200">Último mes</button>
     </div>
+
+    @if (barChartData()) {
+      <div class="mt-8 bg-white rounded-xl p-3 shadow-sm mx-2">
+        <div class="flex flex-col mb-6">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-[#1E293B]">Distribución por Grupo</h3>
+            <lucide-icon
+              [img]="CircleAlertIcon"
+              class="w-5 h-5 text-primary"
+              pTooltip="Esta gráfica muestra si se han registrados más asistencias en un grupo que en otro."
+              [tooltipStyleClass]="'text-sm'">
+            </lucide-icon>
+          </div>
+          <span class="text-sm text-gray-600">Asistencias registradas</span>
+        </div>
+        
+        <p-chart type="bar" [data]="barChartData()" [options]="barOptions" />
+      </div>
+    }
+
+    @if (lineChartData() && selectedTimeRange() !== 'today') {
+      <div class="mt-8 bg-white rounded-xl p-3 shadow-sm mx-2">
+        <div class="flex flex-col mb-6">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-[#1E293B]">Evolución de Asistencias</h3>
+            <lucide-icon
+              [img]="CircleAlertIcon"
+              class="w-5 h-5 text-primary"
+              pTooltip="Esta gráfica muestra la evolución de las asistencias en el tiempo seleccionado."
+              [tooltipStyleClass]="'text-sm'">
+            </lucide-icon>
+          </div>
+          <span class="text-sm text-gray-600">Asistencias por día</span>
+        </div>
+        
+        <p-chart type="line" [data]="lineChartData()" [options]="lineOptions" />
+      </div>
+    }
+
+    @if (pieChartData()) {
+      <div class="mt-8 bg-white rounded-xl p-3 shadow-sm mx-2">
+        <div class="flex flex-col mb-6">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-[#1E293B]">Distribución por Género</h3>
+            <lucide-icon
+              [img]="CircleAlertIcon"
+              class="w-5 h-5 text-primary"
+              pTooltip="Esta gráfica muestra el acumulado de asistencias registradas por género."
+              [tooltipStyleClass]="'text-sm'">
+            </lucide-icon>
+          </div>
+        </div>
+        
+        <p-chart type="pie" [data]="pieChartData()" [options]="pieOptions" />
+      </div>
+    }
+
   </div>
 </app-main-layout>
