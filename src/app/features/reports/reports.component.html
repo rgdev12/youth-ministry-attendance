@@ -1,0 +1,178 @@
+<app-main-layout>
+  <div class="px-5 lg:px-0 py-5 flex flex-col overflow-hidden lg:max-w-4xl lg:mx-auto">
+    <!-- Back Button -->
+    <button class="w-fit">
+      <a routerLink="/dashboard" class="flex items-center gap-2">
+        <lucide-icon [img]="ArrowLeftIcon" class="w-5 h-5 text-primary"></lucide-icon>
+        <span class="text-primary-light text-sm">Volver</span>
+      </a>
+    </button>
+
+    <!-- Header -->
+    <div class="flex items-start justify-between pb-2 border-b border-gray-200">
+      <h2 class="text-2xl font-bold text-[#1E293B]">
+        Reporte de Asistencia
+      </h2>
+    </div>
+
+    <!-- Date Filters -->
+    <div class="flex gap-3 mt-5">
+      <div class="flex flex-col gap-1">
+        <label class="text-xs text-gray-500 font-medium text-primary">Desde</label>
+        <p-datepicker 
+          [ngModel]="startDate()"
+          (ngModelChange)="onStartDateChange($event)"
+          appendTo="body"
+          dateFormat="M d, yy"
+          [showIcon]="true" 
+          iconDisplay="input">
+        </p-datepicker>
+      </div>
+      <div class="flex flex-col gap-1">
+        <label class="text-xs text-gray-500 font-medium text-primary">Hasta</label>
+        <p-datepicker 
+          [ngModel]="endDate()"
+          (ngModelChange)="onEndDateChange($event)"
+          appendTo="body"
+          dateFormat="M d, yy"
+          [showIcon]="true" 
+          iconDisplay="input">
+        </p-datepicker>
+      </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-3 lg:grid-cols-4 gap-3 my-4">
+      @if (selectedGroupId() === null) {
+        <!-- Total Card -->
+        <div class="bg-[#F5FAFF] border border-[#F1F5F9] rounded-xl p-4">
+          <p class="text-xs opacity-80 font-medium text-primary">Total</p>
+          <p class="text-2xl font-bold text[#0F172A]">{{ totalCount() }}</p>
+        </div>
+        <!-- Group Cards -->
+        @for (group of groups(); track group.id) {
+          <div class="rounded-xl p-4" [style.background-color]="'color-mix(in srgb, ' + group.color + ', white 90%)'">
+            <p class="text-xs font-medium" [style.color]="group.color">{{ group.name }}</p>
+            <p class="text-2xl font-bold text-gray-800">{{ countByGroup()[group.name] || 0 }}</p>
+          </div>
+        }
+      } @else {
+        <!-- Expanded Total Card when group is selected -->
+        <div class="bg-[#F5FAFF] border border-[#F1F5F9] rounded-xl p-4 col-span-3 lg:col-span-4">
+          <p class="text-xs opacity-80 font-medium">Total {{ selectedGroupName() }}</p>
+          <p class="text-2xl font-bold">{{ totalCount() }}</p>
+        </div>
+      }
+    </div>
+
+    <!-- Search Input -->
+    <div class="relative lg:max-w-md">
+      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+        <lucide-icon [img]="SearchIcon" class="w-5 h-5 text-gray-500"></lucide-icon>
+      </div>
+
+      <input
+        pInputText
+        type="text"
+        id="searchQuery"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
+        name="searchQuery"
+        placeholder="Buscar miembro"
+        class="w-full !pl-12"
+      />
+    </div>
+
+    <!-- Group Filter Chips -->
+    <div class="flex flex-wrap gap-2 mt-4">
+      <button 
+        (click)="selectGroup(null)"
+        class="px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200"
+        [class]="selectedGroupId() === null 
+          ? 'bg-primary text-white shadow-md' 
+          : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'">
+        Todos
+      </button>
+      @for (group of groups(); track group.id) {
+        <button 
+          (click)="selectGroup(group.id)"
+          class="px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200"
+          [class]="selectedGroupId() === group.id 
+            ? 'bg-primary text-white shadow-md' 
+            : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'">
+          {{ group.name }}
+        </button>
+      }
+    </div>
+
+    <!-- Members Header -->
+    <div class="flex items-center justify-between mt-10 mb-3">
+      <div class="flex items-center gap-2">
+        <lucide-icon [img]="UsersIcon" class="w-5 h-5 text-primary"></lucide-icon>
+        <span class="text-sm font-semibold text-primary tracking-wide">
+          MIEMBROS ({{ filteredMembers().length }})
+        </span>
+      </div>
+
+      <button (click)="downloadReport()" class="flex items-center gap-1 border border-secondary rounded-lg px-2 py-1 cursor-pointer hover:bg-secondary/10 transition-colors">
+        <lucide-icon [img]="SheetIcon" class="w-4 h-4 text-secondary"></lucide-icon>
+        <span class="text-sm text-secondary">Descargar Excel</span>
+      </button>
+    </div>
+
+    <!-- Members List -->
+    <div class="flex-1 my-2 min-h-0 border border-gray-200 rounded-lg px-2">
+      @if (isLoading()) {
+        <div class="flex items-center justify-center py-10">
+          <span class="text-gray-400">Cargando...</span>
+        </div>
+      } @else if (filteredMembers().length === 0) {
+        <div class="flex items-center justify-center py-10">
+          <span class="text-gray-400">No se encontraron miembros</span>
+        </div>
+      } @else {
+        <div class="lg:grid lg:grid-cols-2 lg:gap-x-4">
+          @for (member of filteredMembers(); track member.member_id) {
+            <div class="flex items-center gap-3 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50/50 transition-colors">
+              <!-- Avatar with initials -->
+              <div 
+                class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 border-2 bg-gradient-to-br from-gray-200 to-gray-300 border-gray-300">
+                <span class="text-base font-bold tracking-wide text-gray-600">
+                  {{ getInitials(member.full_name) }}
+                </span>
+              </div>
+
+              <!-- Member Info -->
+              <div class="flex-1 flex flex-col gap-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-base font-semibold text-gray-800 truncate">{{ member.full_name }}</span>
+                  <span class="text-xs text-gray-500 text-secondary">{{ member.group_name }}</span>
+                </div>
+                <div class="flex items-center gap-3 text-xs text-gray-500">
+                  <span class="flex items-center gap-1">
+                    <lucide-icon [img]="CalendarIcon" class="w-3.5 h-3.5 text-primary"></lucide-icon>
+                    {{ member.attendance_count }} Asistencias
+                  </span>
+
+                  @if (member.needs_alert) {
+                    <span class="flex items-center gap-1 text-red-500">
+                      <lucide-icon [img]="AlertIcon" class="w-3.5 h-3.5"></lucide-icon>
+                      {{ formatDisplayDate(member.last_attendance) }}
+                    </span>
+                  }
+                  @else {
+                    <span class="flex items-center gap-1">
+                      <lucide-icon [img]="ClockIcon" class="w-3.5 h-3.5 text-primary"></lucide-icon>
+                      Última: {{ formatDisplayDate(member.last_attendance) }}
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</app-main-layout>
+

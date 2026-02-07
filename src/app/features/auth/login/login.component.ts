@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LucideAngularModule, Mail, Lock, LogIn, AlertCircle, Loader2 } from 'lucide-angular';
 import { AuthService } from '../../../core/services/auth.service';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule, InputTextModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })

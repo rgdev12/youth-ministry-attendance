@@ -1,7 +1,8 @@
 export interface Member {
-  id?: string;
+  id?: number;
   name: string;
   gender: 'M' | 'F';
-  group_id: string;
+  group_id: number;
+  is_active?: boolean;
   created_at?: string;
 }

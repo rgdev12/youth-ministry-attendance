@@ -1,5 +1,7 @@
 export interface Group {
-  id: string;
+  id: number;
   name: string;
   description?: string;
+  color?: string;
+  front_img?: string;
 }

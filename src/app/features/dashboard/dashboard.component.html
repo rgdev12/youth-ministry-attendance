@@ -1,9 +1,9 @@
 <app-main-layout>
   <!-- Welcome Card -->
-  <div class="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 py-5">
+  <div class="px-5 sm:px-0 py-5 lg:max-w-4xl lg:mx-auto">
     <div class="flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold text-primary mb-2">
+        <h2 class="text-2xl font-bold text-primary mb-1">
           Bienvenido
         </h2>
         <p class="text-gray-500 text-sm">
@@ -21,47 +21,46 @@
   </div>
 
   <!-- Quick Stats -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="rounded-lg border border-primary cursor-pointer" (click)="goToAttendances('jovenes')">
-      <img src="assets/images/jovenes-img.jpg" alt="Jóvenes IMG" class="w-full h-48 object-cover rounded-t-lg">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-5 sm:px-0 lg:max-w-4xl lg:mx-auto">
+    <div
+      *ngFor="let group of groups()"
+      class="rounded-lg border cursor-pointer"
+      [style.border-color]="group.color"
+      (click)="goToAttendances(group.id)"
+    >
+      <img [src]="group.front_img" alt="Jóvenes IMG" class="w-full h-48 object-cover rounded-t-lg">
       
       <div class="p-4">
         <div class="flex items-center justify-between">
-          <h3 class="text-xl font-bold text-primary">Jóvenes</h3>
-          <lucide-icon [img]="ChevronRightIcon" class="w-6 h-6 text-primary"></lucide-icon>
+          <h3 class="text-xl font-bold" [style.color]="group.color">{{ group.name }}</h3>
+          <lucide-icon [img]="ChevronRightIcon" class="w-6 h-6" [style.color]="group.color"></lucide-icon>
         </div>
-        <p class="text-sm text-gray-500 mt-2">Registrar asistencia para el grupo de jóvenes.</p>
-      </div>
-    </div>
-
-    <div class="rounded-lg border border-secondary cursor-pointer" (click)="goToAttendances('pre-jovenes')">
-      <img src="assets/images/pre-img.jpg" alt="Pre-Jóvenes IMG" class="w-full h-48 object-cover rounded-t-lg">
-      
-      <div class="p-4">
-        <div class="flex items-center justify-between">
-          <h3 class="text-xl font-bold text-secondary">Pre-Jóvenes</h3>
-          <lucide-icon [img]="ChevronRightIcon" class="w-6 h-6 text-secondary"></lucide-icon>
-        </div>
-        <p class="text-sm text-gray-500 mt-2">Registrar asistencia para el grupo de Pre-Jóvenes.</p>
+        <p class="text-sm text-gray-500 mt-2">{{ group.description }}</p>
       </div>
     </div>
   </div>
 
-  <button 
-    (click)="openNewMemberModal()"
-    class="flex items-center justify-center gap-2 px-4 py-2 mt-5 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer sm:hidden w-full">
-    <lucide-icon [img]="UserPlusIcon" class="w-5 h-5"></lucide-icon>
-    <span>Nuevo Miembro</span>
-  </button>
+  <div class="px-5 sm:px-0 sm:mb-0 my-5 lg:max-w-4xl lg:mx-auto">
+    <button 
+      (click)="openNewMemberModal()"
+      class="flex items-center justify-center gap-2 py-3 px-4 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer sm:hidden w-full">
+      <lucide-icon [img]="UserPlusIcon" class="w-5 h-5"></lucide-icon>
+      <span>Nuevo Miembro</span>
+    </button>
+  </div>
 </app-main-layout>
 
 <!-- New Member Modal -->
-<app-modal 
-  [isOpen]="isNewMemberModalOpen" 
-  title="Nuevo Miembro"
-  (closed)="closeNewMemberModal()">
+<p-dialog 
+  header="Nuevo Miembro"
+  [(visible)]="isNewMemberModalOpen" 
+  [modal]="true"
+  [closable]="false"
+  [style]="{ width: '28rem', margin: '0 10px' }">
   <app-new-member-form
     (saved)="onMemberSaved($event)"
     (cancelled)="closeNewMemberModal()">
   </app-new-member-form>
-</app-modal>
+</p-dialog>
+
+

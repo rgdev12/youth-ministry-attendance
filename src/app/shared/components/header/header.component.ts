@@ -1,11 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { LucideAngularModule, CircleUserRound , Lock, FileText, BarChart3, LogOut } from 'lucide-angular';
+import { LucideAngularModule, CircleUserRound, Lock, FileText, BarChart3, LogOut, UserRound } from 'lucide-angular';
 import { AuthService } from '@core/services/auth.service';
+import { Popover } from 'primeng/popover';
 
 @Component({
   selector: 'app-header',
-  imports: [LucideAngularModule, RouterLink],
+  imports: [LucideAngularModule, RouterLink, Popover],
   standalone: true,
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
@@ -20,21 +21,9 @@ export class Header {
   FileTextIcon = FileText;
   BarChartIcon = BarChart3;
   LogOutIcon = LogOut;
-
-  // Menu state
-  isMenuOpen = false;
-
-  toggleMenu(): void {
-    this.isMenuOpen = !this.isMenuOpen;
-  }
-
-  closeMenu(): void {
-    this.isMenuOpen = false;
-  }
+  UserRoundIcon = UserRound;
 
   async logout(): Promise<void> {
-    this.closeMenu();
     await this.authService.signOut();
-    this.router.navigate(['/auth/login']);
   }
 }

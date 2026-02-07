@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, Loader2 } from 'lucide-angular';
@@ -11,37 +11,33 @@ import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
 
 @Component({
-  selector: 'app-new-member-form',
+  selector: 'app-edit-member-form',
   standalone: true,
   imports: [CommonModule, FormsModule, LucideAngularModule, ReactiveFormsModule, InputTextModule, Select, SelectButton],
-  templateUrl: './new-member-form.component.html',
-  styleUrl: './new-member-form.component.scss'
+  templateUrl: './edit-member-form.component.html',
+  styleUrl: './edit-member-form.component.scss'
 })
-export class NewMemberFormComponent {
+export class EditMemberFormComponent implements OnInit {
+  @Input({ required: true }) member!: Member;
   @Output() saved = new EventEmitter<Member>();
   @Output() cancelled = new EventEmitter<void>();
 
   private groupService = inject(GroupService);
   private memberService = inject(MemberService);
 
-  // Icons
   readonly LoaderIcon = Loader2;
 
-  // Gender options for SelectButton
   genderOptions = [
     { label: 'Masculino', value: 'M' },
     { label: 'Femenino', value: 'F' }
   ];
 
-  // Groups from the service (cached globally)
   readonly groups = this.groupService.groups;
   readonly isGroupsLoading = this.groupService.loading;
   
-  // UI state
   isSaving = false;
   error = '';
 
-  // Reactive form
   memberForm: FormGroup;
 
   constructor(private fb: FormBuilder) {
@@ -52,8 +48,18 @@ export class NewMemberFormComponent {
     });
   }
 
+  ngOnInit(): void {
+    if (this.member) {
+      this.memberForm.patchValue({
+        name: this.member.name,
+        gender: this.member.gender,
+        groupId: this.member.group_id
+      });
+    }
+  }
+
   async onSubmit(): Promise<void> {
-    if (this.memberForm.invalid) {
+    if (this.memberForm.invalid || !this.member.id) {
       this.error = 'Por favor completa todos los campos';
       return;
     }
@@ -62,15 +68,14 @@ export class NewMemberFormComponent {
     this.error = '';
 
     try {
-      const newMember = await this.memberService.createMember({
+      const updatedMember = await this.memberService.updateMember(this.member.id, {
         name: this.memberForm.value.name.trim(),
         gender: this.memberForm.value.gender,
         group_id: this.memberForm.value.groupId
       });
-      this.saved.emit(newMember);
-      this.resetForm();
+      this.saved.emit(updatedMember);
     } catch (err) {
-      this.error = 'Error al guardar el miembro';
+      this.error = 'Error al actualizar el miembro';
       console.error(err);
     } finally {
       this.isSaving = false;
@@ -78,16 +83,6 @@ export class NewMemberFormComponent {
   }
 
   onCancel(): void {
-    this.resetForm();
     this.cancelled.emit();
-  }
-
-  private resetForm(): void {
-    this.memberForm.reset();
-    this.memberForm.patchValue({
-      gender: 'M',
-      groupId: 1
-    });
-    this.error = '';
   }
 }
