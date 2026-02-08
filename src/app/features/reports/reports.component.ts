@@ -162,10 +162,10 @@ export default class ReportsComponent {
    * Download report as Excel file
    */
   async downloadReport(): Promise<void> {
-    const ExcelJS = await import('exceljs');
+    const { Workbook } = await import('exceljs');
     const { saveAs } = await import('file-saver');
 
-    const workbook = new ExcelJS.Workbook();
+    const workbook = new Workbook();
     workbook.creator = 'Youth Ministry Attendance';
     workbook.created = new Date();
 
