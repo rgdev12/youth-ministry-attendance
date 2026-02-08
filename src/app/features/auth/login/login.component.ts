@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LucideAngularModule, Mail, Lock, LogIn, AlertCircle, Loader2 } from 'lucide-angular';
+import { LucideAngularModule, Mail, Lock, LogIn, AlertCircle, Loader2, Eye, EyeOff } from 'lucide-angular';
 import { AuthService } from '../../../core/services/auth.service';
 import { InputTextModule } from 'primeng/inputtext';
 
@@ -23,12 +23,15 @@ export default class LoginComponent {
   readonly LoginIcon = LogIn;
   readonly AlertIcon = AlertCircle;
   readonly LoaderIcon = Loader2;
+  readonly EyeIcon = Eye;
+  readonly EyeOffIcon = EyeOff;
 
   // Form state
   email = '';
   password = '';
   loading = signal(false);
   error = signal<string | null>(null);
+  showPassword = signal(false);
 
   async onSubmit() {
     if (!this.email || !this.password) {
@@ -48,5 +51,9 @@ export default class LoginComponent {
     } else {
       this.router.navigate(['/dashboard']);
     }
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword.set(!this.showPassword());
   }
 }
