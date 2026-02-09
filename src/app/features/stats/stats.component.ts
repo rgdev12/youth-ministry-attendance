@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect, computed } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MainLayout } from '@shared/layouts/main-layout/main-layout.component';
 import { LucideAngularModule, ArrowLeft, CircleAlert } from 'lucide-angular';
@@ -17,7 +17,7 @@ import { TooltipModule } from 'primeng/tooltip';
   styleUrl: './stats.component.scss',
 })
 
-export default class StatsComponent {
+export default class StatsComponent implements OnInit {
   readonly ArrowLeftIcon = ArrowLeft;
   readonly CircleAlertIcon = CircleAlert;
   private statisticsService = inject(StatisticsService);
@@ -167,13 +167,12 @@ export default class StatsComponent {
     };
   });
 
-  constructor() {
-    effect(() => {
-      const start = this.startDate();
-      start.setDate(start.getDate() - 14);
-      const end = this.endDate();
-      this.loadStatistics(start, end);
-    });
+  ngOnInit(): void {
+    const start = this.startDate();
+    start.setDate(start.getDate() - 14);
+    const end = this.endDate();
+
+    this.loadStatistics(start, end);
   }
 
   selectTimeRange(timeRange: string): void {
@@ -183,7 +182,7 @@ export default class StatsComponent {
     const last2weeks = new Date(today);
     last2weeks.setDate(today.getDate() - 14);
     const lastmonth = new Date(today);
-    lastmonth.setDate(today.getDate() - 30);
+    lastmonth.setDate(today.getDate() - 31);
 
     switch (timeRange) {
       case 'today':
@@ -200,6 +199,7 @@ export default class StatsComponent {
         break;
     }
 
+    this.loadStatistics(this.startDate(), this.endDate());
     this.selectedTimeRange.set(timeRange);
   }
 

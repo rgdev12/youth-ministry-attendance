@@ -139,12 +139,21 @@
             [class]="selectedGroupId() === group.id 
               ? 'bg-primary text-white shadow-md' 
               : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'">
-            {{ group.name.slice(0, 7) }}
+            {{ group.name }}
           </button>
-        }
+        }        
+      </div>
+    </div>
 
-        <!-- Divider -->
-        <div class="w-px h-6 bg-gray-300 mx-1"></div>
+    <!-- Members Header -->
+    <div class="flex items-center justify-between mt-8 mb-3 mx-5 lg:mx-auto lg:w-full lg:max-w-4xl">
+      <div class="flex items-center justify-between w-full">
+        <div class="flex items-center gap-2">
+          <lucide-icon [img]="UsersIcon" class="w-5 h-5 text-primary"></lucide-icon>
+          <span class="text-sm font-semibold text-primary tracking-wide">
+            MIEMBROS ({{ filteredMembers().length }})
+          </span>
+        </div>
 
         <!-- Show Inactive Toggle -->
         <div class="flex items-center gap-2">
@@ -154,16 +163,6 @@
           </p-toggleswitch>
           <span class="text-sm text-gray-600">Inactivos</span>
         </div>
-      </div>
-    </div>
-
-    <!-- Members Header -->
-    <div class="flex items-center justify-between mt-8 mb-3 mx-5 lg:mx-auto lg:w-full lg:max-w-4xl">
-      <div class="flex items-center gap-2">
-        <lucide-icon [img]="UsersIcon" class="w-5 h-5 text-primary"></lucide-icon>
-        <span class="text-sm font-semibold text-primary tracking-wide">
-          MIEMBROS ({{ filteredMembers().length }})
-        </span>
       </div>
     </div>
 

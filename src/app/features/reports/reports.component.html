@@ -22,6 +22,7 @@
         <p-datepicker 
           [ngModel]="startDate()"
           (ngModelChange)="onStartDateChange($event)"
+          [readonlyInput]="true"
           appendTo="body"
           dateFormat="M d, yy"
           [showIcon]="true" 
@@ -33,6 +34,7 @@
         <p-datepicker 
           [ngModel]="endDate()"
           (ngModelChange)="onEndDateChange($event)"
+          [readonlyInput]="true"
           appendTo="body"
           dateFormat="M d, yy"
           [showIcon]="true" 

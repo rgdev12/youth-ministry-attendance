@@ -1,5 +1,5 @@
 <app-main-layout>
-  <div class="px-5 lg:px-0 py-5 h-[calc(100vh-80px)] flex flex-col overflow-hidden lg:max-w-3xl lg:mx-auto">
+  <div class="px-5 lg:px-0 py-5 h-[calc(100dvh-80px)] flex flex-col overflow-hidden lg:max-w-3xl lg:mx-auto">
     <button class="w-fit">
       <a routerLink="/dashboard" class="flex items-center gap-2 ">
         <lucide-icon [img]="ArrowLeftIcon" class="w-5 h-5 text-primary"></lucide-icon>
@@ -20,6 +20,7 @@
       <p-datepicker 
         [ngModel]="selectedDate()"
         (ngModelChange)="onDateChange($event)"
+        [readonlyInput]="true"
         appendTo="body"
         dateFormat="M d"
         [showIcon]="true" 
@@ -35,6 +36,7 @@
       </div>
 
       <input
+        #searchInput
         pInputText
         type="text"
         id="searchQuery"
@@ -42,8 +44,17 @@
         (ngModelChange)="searchQuery.set($event)"
         name="searchQuery"
         placeholder="Buscar miembro"
-        class="w-full !pl-12"
+        class="w-full !pl-12 !pr-10"
       />
+
+      @if (searchQuery()) {
+        <button 
+          type="button"
+          (click)="clearSearch()"
+          class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer hover:opacity-70 transition-opacity">
+          <lucide-icon [img]="XIcon" class="w-5 h-5 text-gray-400"></lucide-icon>
+        </button>
+      }
     </div>
 
     <!-- Members Header -->
@@ -55,19 +66,33 @@
         </span>
       </div>
 
-      <button
-        (click)="openNewMemberModal()"
-        class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer">
-        <lucide-icon [img]="UserPlusIcon" class="w-5 h-5"></lucide-icon>
-        <span class="hidden sm:inline">Nuevo Miembro</span>
-      </button>
+      <div class="flex items-center gap-2">
+        <button 
+          (click)="saveAttendance()"
+          [disabled]="isSaving()"
+          class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer">
+          <lucide-icon
+            [img]="isSaving() ? LoaderCircleIcon : SaveIcon" 
+            class="w-5 h-5" 
+            [class.animate-spin]="isSaving()"></lucide-icon>
+          <span class="hidden sm:inline text-sm">{{ isSaving() ? 'Guardando...' : 'Guardar Asistencia' }}</span>
+        </button>
+        <button
+          (click)="openNewMemberModal()"
+          class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer">
+          <lucide-icon [img]="UserPlusIcon" class="w-5 h-5"></lucide-icon>
+          <span class="hidden sm:inline text-sm">Nuevo Miembro</span>
+        </button>
+      </div>
     </div>
 
     <!-- Members List -->
     <div class="flex-1 overflow-y-auto mb-2 min-h-0 shadow-scroll">
       <div class="lg:grid lg:grid-cols-2 lg:gap-x-4">
         @for (member of filteredMembers(); track member.id) {
-          <div class="flex items-center gap-3 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50/50 transition-colors">
+          <div 
+            (click)="toggleAttendance(member.id)"
+            class="flex items-center gap-3 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50/50 transition-colors cursor-pointer select-none">
             <!-- Avatar with initials -->
             <div 
               class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 border-2 transition-all duration-300"
@@ -96,6 +121,7 @@
             <!-- Toggle Switch -->
             <p-toggleswitch 
               [ngModel]="member.isPresent"
+              (click)="$event.stopPropagation()"
               (ngModelChange)="toggleAttendance(member.id)"
               class="flex-shrink-0 [--p-toggleswitch-checked-background:theme(colors.secondary)] [--p-toggleswitch-checked-hover-background:theme(colors.secondary)]">
             </p-toggleswitch>
@@ -106,20 +132,13 @@
 
     <!-- Summary Footer -->
     <div class="border-t border-gray-200 pt-4">
-      <div class="flex justify-between items-center mb-4">
+      <div class="flex justify-between items-center">
         <span class="text-sm font-medium text-gray-500">Resumen</span>
         <div class="flex gap-4">
           <span class="text-sm font-semibold text-secondary">{{ presentCount() }} Presentes</span>
           <span class="text-sm text-gray-400">{{ absentCount() }} Ausentes</span>
         </div>
       </div>
-      
-      <button 
-        (click)="saveAttendance()"
-        [disabled]="isSaving()"
-        class="w-full py-3 px-4 bg-gradient-to-r from-primary to-primary-light text-white border-none rounded-xl text-base font-semibold cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0">
-        {{ isSaving() ? 'Guardando...' : 'Guardar Asistencia' }}
-      </button>
     </div>
   </div>
 </app-main-layout>

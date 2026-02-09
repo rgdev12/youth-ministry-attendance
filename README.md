@@ -1,59 +1,65 @@
-# YouthMinistryAttendance
+# Youth Ministry Attendance
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.2.
+Aplicación para gestionar la asistencia de miembros de un grupo de ministerio juvenil, capaz de realizar registros, reportes y análisis estadísticos.
 
-## Development server
+## Características
 
-To start a local development server, run:
+- **Gestión de Miembros**: Crear, leer, actualizar y eliminar miembros.
+- **Registro de Asistencia**: Fácilmente marcar asistencia para reuniones semanales o eventos especiales.
+- **Reportes**: Generar reportes de asistencia detallados y exportarlos a Excel.
+- **Tablero**: Visualizar tendencias de asistencia y métricas clave.
+- **Autenticación**: Acceso seguro para administradores mediante Supabase Auth.
+- **Diseño Responsivo**: Enfoque mobile-first con mejoras para escritorio.
 
-```bash
-ng serve
-```
+## Stack Tecnológico
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- **Frontend**: Angular 21
+- **Estilos**: TailwindCSS 4, PrimeNG 21
+- **Iconos**: Lucide Angular, PrimeIcons
+- **Backend / Base de Datos**: Supabase
+- **Visualización de Datos**: Chart.js
+- **Exportación a Excel**: ExcelJS
 
-## Code scaffolding
+## Comenzando
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Prerrequisitos
 
-```bash
-ng generate component component-name
-```
+- Node.js (v18 o superior recomendado)
+- pnpm
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Instalación
 
-```bash
-ng generate --help
-```
+1. **Clonar el repositorio:**
+   ```bash
+   git clone <repository-url>
+   cd youth-ministry-attendance
+   ```
 
-## Building
+2. **Instalar dependencias:**
+   ```bash
+   pnpm install
+   ```
 
-To build the project run:
+3. **Configurar Entorno:**
+   Crea un proyecto en Supabase y agrega tus credenciales en `src/environments/environment.ts`:
+   ```typescript
+   export const environment = {
+     production: false,
+     supabase: {
+       url: 'TU_URL_DE_SUPABASE',
+       anonKey: 'TU_ANON_KEY_DE_SUPABASE'
+     }
+   };
+   ```
 
-```bash
-ng build
-```
+### Servidor de Desarrollo
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Ejecuta `pnpm start` para un servidor de desarrollo. Navega a `http://localhost:4200/`. La aplicación se recargará automáticamente si cambias alguno de los archivos fuente.
 
-## Running unit tests
+### Build (Construcción)
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Ejecuta `pnpm run build` para construir el proyecto. Los artefactos de construcción se almacenarán en el directorio `dist/`.
 
-```bash
-ng test
-```
+## Ejecutando Tests
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Ejecuta `pnpm run test` para ejecutar las pruebas unitarias a través de [Vitest](https://vitest.dev/).
