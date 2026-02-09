@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { computed, effect } from '@angular/core';
 import { GroupService } from '@core/services/group.service';
 import { InputTextModule } from 'primeng/inputtext';
-import { LucideAngularModule, Search, Users, UserPlus, ArrowLeft } from 'lucide-angular';
+import { LucideAngularModule, Search, Users, UserPlus, ArrowLeft, Save, LoaderCircle } from 'lucide-angular';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { Member } from '@core/models/member.model';
 import { Dialog } from 'primeng/dialog';
@@ -56,6 +56,8 @@ export default class Attendances {
   readonly UsersIcon = Users;
   readonly UserPlusIcon = UserPlus;
   readonly ArrowLeftIcon = ArrowLeft;
+  readonly SaveIcon = Save;
+  readonly LoaderCircleIcon = LoaderCircle;
 
   // Members with attendance status
   members = signal<MemberAttendance[]>([]);
