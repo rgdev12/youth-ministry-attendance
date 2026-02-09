@@ -36,6 +36,7 @@
       </div>
 
       <input
+        #searchInput
         pInputText
         type="text"
         id="searchQuery"
@@ -43,8 +44,17 @@
         (ngModelChange)="searchQuery.set($event)"
         name="searchQuery"
         placeholder="Buscar miembro"
-        class="w-full !pl-12"
+        class="w-full !pl-12 !pr-10"
       />
+
+      @if (searchQuery()) {
+        <button 
+          type="button"
+          (click)="clearSearch()"
+          class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer hover:opacity-70 transition-opacity">
+          <lucide-icon [img]="XIcon" class="w-5 h-5 text-gray-400"></lucide-icon>
+        </button>
+      }
     </div>
 
     <!-- Members Header -->
@@ -61,7 +71,10 @@
           (click)="saveAttendance()"
           [disabled]="isSaving()"
           class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors cursor-pointer">
-          <lucide-icon [img]="isSaving() ? LoaderCircleIcon : SaveIcon" class="w-5 h-5"></lucide-icon>
+          <lucide-icon
+            [img]="isSaving() ? LoaderCircleIcon : SaveIcon" 
+            class="w-5 h-5" 
+            [class.animate-spin]="isSaving()"></lucide-icon>
           <span class="hidden sm:inline text-sm">{{ isSaving() ? 'Guardando...' : 'Guardar Asistencia' }}</span>
         </button>
         <button
@@ -77,7 +90,9 @@
     <div class="flex-1 overflow-y-auto mb-2 min-h-0 shadow-scroll">
       <div class="lg:grid lg:grid-cols-2 lg:gap-x-4">
         @for (member of filteredMembers(); track member.id) {
-          <div class="flex items-center gap-3 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50/50 transition-colors">
+          <div 
+            (click)="toggleAttendance(member.id)"
+            class="flex items-center gap-3 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50/50 transition-colors cursor-pointer select-none">
             <!-- Avatar with initials -->
             <div 
               class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 border-2 transition-all duration-300"
@@ -106,6 +121,7 @@
             <!-- Toggle Switch -->
             <p-toggleswitch 
               [ngModel]="member.isPresent"
+              (click)="$event.stopPropagation()"
               (ngModelChange)="toggleAttendance(member.id)"
               class="flex-shrink-0 [--p-toggleswitch-checked-background:theme(colors.secondary)] [--p-toggleswitch-checked-hover-background:theme(colors.secondary)]">
             </p-toggleswitch>
