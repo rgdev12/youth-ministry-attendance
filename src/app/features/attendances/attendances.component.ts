@@ -178,14 +178,6 @@ export default class Attendances {
   }
 
   /**
-   * Clear the search query
-   */
-  clearSearch(): void {
-    this.searchQuery.set('');
-    this.searchInput?.nativeElement?.focus();
-  }
-
-  /**
    * Save attendance records using the bulk_take_attendance RPC function
    */
   async saveAttendance(): Promise<void> {
