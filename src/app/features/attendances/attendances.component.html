@@ -20,6 +20,7 @@
       <p-datepicker 
         [ngModel]="selectedDate()"
         (ngModelChange)="onDateChange($event)"
+        [readonlyInput]="true"
         appendTo="body"
         dateFormat="M d"
         [showIcon]="true" 
