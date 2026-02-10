@@ -9,11 +9,21 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
   selector: 'app-new-member-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, ReactiveFormsModule, InputTextModule, Select, SelectButton],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    LucideAngularModule, 
+    ReactiveFormsModule, 
+    InputTextModule, 
+    Select, 
+    SelectButton, 
+    DatePickerModule
+  ],
   templateUrl: './new-member-form.component.html',
   styleUrl: './new-member-form.component.scss'
 })
@@ -44,11 +54,15 @@ export class NewMemberFormComponent {
   // Reactive form
   memberForm: FormGroup;
 
+  // Date picker max date (today)
+  maxDate: Date = new Date();
+
   constructor(private fb: FormBuilder) {
     this.memberForm = this.fb.group({
       name: ['', Validators.required],
       gender: ['M', Validators.required],
-      groupId: [1, Validators.required]
+      groupId: [1, Validators.required],
+      birthdate: [null]
     });
   }
 
@@ -65,7 +79,8 @@ export class NewMemberFormComponent {
       const newMember = await this.memberService.createMember({
         name: this.memberForm.value.name.trim(),
         gender: this.memberForm.value.gender,
-        group_id: this.memberForm.value.groupId
+        group_id: this.memberForm.value.groupId,
+        birthdate: this.memberForm.value.birthdate
       });
       this.saved.emit(newMember);
       this.resetForm();

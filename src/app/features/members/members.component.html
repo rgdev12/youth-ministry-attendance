@@ -111,7 +111,9 @@
         </div>
         <input
           pInputText
-          type="text"
+          type="search"
+          inputmode="search"
+          autocomplete="off"
           id="searchQuery"
           [ngModel]="searchQuery()"
           (ngModelChange)="searchQuery.set($event)"

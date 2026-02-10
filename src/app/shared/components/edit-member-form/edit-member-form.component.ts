@@ -9,11 +9,21 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
   selector: 'app-edit-member-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, ReactiveFormsModule, InputTextModule, Select, SelectButton],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    LucideAngularModule, 
+    ReactiveFormsModule, 
+    InputTextModule, 
+    Select, 
+    SelectButton, 
+    DatePickerModule
+  ],
   templateUrl: './edit-member-form.component.html',
   styleUrl: './edit-member-form.component.scss'
 })
@@ -39,21 +49,26 @@ export class EditMemberFormComponent implements OnInit {
   error = '';
 
   memberForm: FormGroup;
+  maxDate: Date = new Date();
 
   constructor(private fb: FormBuilder) {
     this.memberForm = this.fb.group({
       name: ['', Validators.required],
       gender: ['M', Validators.required],
-      groupId: [1, Validators.required]
+      groupId: [1, Validators.required],
+      birthdate: [null]
     });
   }
 
   ngOnInit(): void {
     if (this.member) {
+      const dateObj = this.member.birthdate ? new Date(this.member.birthdate + 'T00:00:00') : null;
+
       this.memberForm.patchValue({
         name: this.member.name,
         gender: this.member.gender,
-        groupId: this.member.group_id
+        groupId: this.member.group_id,
+        birthdate: dateObj
       });
     }
   }
@@ -71,7 +86,8 @@ export class EditMemberFormComponent implements OnInit {
       const updatedMember = await this.memberService.updateMember(this.member.id, {
         name: this.memberForm.value.name.trim(),
         gender: this.memberForm.value.gender,
-        group_id: this.memberForm.value.groupId
+        group_id: this.memberForm.value.groupId,
+        birthdate: this.memberForm.value.birthdate
       });
       this.saved.emit(updatedMember);
     } catch (err) {

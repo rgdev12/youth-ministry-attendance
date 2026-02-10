@@ -5,4 +5,5 @@ export interface Member {
   group_id: number;
   is_active?: boolean;
   created_at?: string;
+  birthdate?: string;
 }
