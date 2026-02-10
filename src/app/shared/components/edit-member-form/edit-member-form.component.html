@@ -37,6 +37,21 @@
     />
   </div>
 
+  <!-- Birth date field -->
+  <div class="space-y-2">
+    <label for="birthdate" class="block text-sm font-medium text-gray-700">Fecha de nacimiento</label>
+    <p-datepicker
+      inputId="birthdate"
+      formControlName="birthdate"
+      dateFormat="dd/mm/yy"
+      [showIcon]="true"
+      [maxDate]="maxDate"
+      placeholder="dd/mm/yyyy"
+      class="w-full"
+      appendTo="body"
+    />
+  </div>
+
   <!-- Group selector -->
   <div class="space-y-2">
     <span class="block text-sm font-medium text-gray-700">Grupo</span>
