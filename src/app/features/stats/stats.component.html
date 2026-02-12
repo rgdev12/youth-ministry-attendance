@@ -47,11 +47,11 @@
               <lucide-icon
                 [img]="CircleAlertIcon"
                 class="w-5 h-5 text-primary"
-                pTooltip="Esta gráfica muestra si se han registrados más asistencias en un grupo que en otro."
+                pTooltip="Esta gráfica muestra la cantidad de miembros asistidos por grupo. (si asistieron almenos 1 vez en el periodo seleccionado)"
                 [tooltipStyleClass]="'text-sm'">
               </lucide-icon>
             </div>
-            <span class="text-sm text-gray-600">Asistencias registradas</span>
+            <span class="text-sm text-gray-600">Cantidad de miembros asistidos</span>
           </div>
           
           <p-chart type="bar" [data]="barChartData()" [options]="barOptions" />
@@ -66,7 +66,7 @@
               <lucide-icon
                 [img]="CircleAlertIcon"
                 class="w-5 h-5 text-primary"
-                pTooltip="Esta gráfica muestra el acumulado de asistencias registradas por género."
+                pTooltip="Esta gráfica muestra la cantidad de miembros asistidos por género. (si asistieron almenos 1 vez en el periodo seleccionado)"
                 [tooltipStyleClass]="'text-sm'">
               </lucide-icon>
             </div>
